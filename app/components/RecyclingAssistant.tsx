@@ -43,8 +43,6 @@ export default function RecyclingAssistant() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
-  const galleryInputRef = useRef<HTMLInputElement>(null)
-  const cameraFallbackInputRef = useRef<HTMLInputElement>(null)
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop())
     streamRef.current = null
@@ -52,35 +50,12 @@ export default function RecyclingAssistant() {
 
   useEffect(() => () => stopCamera(), [stopCamera])
 
-  useEffect(() => {
-    const input = galleryInputRef.current
-    if (!input) return
-    const el = input
-    function onFileChange() {
-      const file = el.files?.[0]
-      if (!file) return
-      setPhoto(URL.createObjectURL(file))
-      setView('preview')
-      el.value = ''
-    }
-    el.addEventListener('change', onFileChange)
-    return () => el.removeEventListener('change', onFileChange)
-  }, [])
-
-  useEffect(() => {
-    const input = cameraFallbackInputRef.current
-    if (!input) return
-    const el = input
-    function onFileChange() {
-      const file = el.files?.[0]
-      if (!file) return
-      setPhoto(URL.createObjectURL(file))
-      setView('preview')
-      el.value = ''
-    }
-    el.addEventListener('change', onFileChange)
-    return () => el.removeEventListener('change', onFileChange)
-  }, [showCameraFallback])
+  function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setPhoto(URL.createObjectURL(file))
+    setView('preview')
+  }
 
   useEffect(() => {
     if (view === 'camera' && videoRef.current && streamRef.current) {
@@ -167,27 +142,27 @@ export default function RecyclingAssistant() {
                 <CameraIcon className="h-4 w-4" />
                 Aparat
               </button>
-              <label className="flex cursor-pointer items-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-600 transition-transform active:scale-95">
+              <label className="relative overflow-hidden flex cursor-pointer items-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-600 transition-transform active:scale-95">
                 <GalleryIcon className="h-4 w-4" />
                 Galeria
                 <input
-                  ref={galleryInputRef}
                   type="file"
                   accept="image/*"
-                  className="hidden"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleFileSelected}
                 />
               </label>
             </div>
             {showCameraFallback && (
-              <label className="flex cursor-pointer items-center gap-2 rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform active:scale-95">
+              <label className="relative overflow-hidden flex cursor-pointer items-center gap-2 rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform active:scale-95">
                 <CameraIcon className="h-4 w-4" />
                 Otwórz aparat
                 <input
-                  ref={cameraFallbackInputRef}
                   type="file"
                   accept="image/*"
                   capture="environment"
-                  className="hidden"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleFileSelected}
                 />
               </label>
             )}
