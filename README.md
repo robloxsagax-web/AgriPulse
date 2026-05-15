@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gdzie to wyrzucić? 🗑️
 
-## Getting Started
+**A Polish recycling assistant powered by Gemma 4**
 
-First, run the development server:
+Take a photo of any item — even contaminated or unusual ones — and find out which bin it belongs in. Built for the [`dev.to` Gemma 4 Challenge](https://dev.to/challenges/google-gemma-2026-05-06), May 2026.
+
+🔗 **Live demo:** [your-app-url.vercel.app](https://your-app-url.vercel.app)
+📝 **Write-up:** [`dev.to` article](https://dev.to/your-username/your-article-slug)
+
+---
+
+## The problem
+
+Recycling rules in Poland confuse even people who care. The hard cases aren't "plastic bottle" or "newspaper" — they're:
+
+- An empty hair dye bottle stained with dried dye
+- A pizza box with grease on the bottom
+- A pet food can with dried residue
+- Old electronics: where exactly do they go?
+- The new deposit system (kaucja, since October 2025) — which bottles qualify?
+- The new purple textile bins (mandatory since January 2025)
+
+Existing apps in Poland are searchable databases — they require users to know what an item is called in Polish, and they often miss edge cases. This app uses Gemma 4's vision capabilities to **look at the item and reason about it**, including its condition.
+
+## How it works
+
+1. User takes a photo of an item with their phone camera
+2. The app sends the photo to Gemma 4 (E4B variant) along with a detailed system prompt encoding Polish recycling rules
+3. Gemma returns structured JSON: bin category, preparation steps, explanation, edge-case notes
+4. The app displays the result with the corresponding bin color
+
+## Categories supported
+
+The app classifies items into nine disposal categories matching Poland's current waste system:
+
+| Category | Bin color | Examples |
+|---|---|---|
+| `plastik_metal` | 🟡 Yellow | Plastic bottles, cans, Tetra Pak |
+| `papier` | 🔵 Blue | Paper, cardboard |
+| `szklo` | 🟢 Green | Glass jars, bottles |
+| `bio` | 🟤 Brown | Food scraps, garden waste |
+| `zmieszane` | ⚫ Grey | Mixed waste — contaminated or composite items |
+| `tekstylia` | 🟣 Purple | Clothes, shoes (separate collection mandatory since Jan 2025) |
+| `elektroodpady` | 🔴 Red | Small electronics, batteries |
+| `pszok` | — | Large/hazardous items (municipal drop-off) |
+| `kaucja` | — | Deposit-return bottles & cans (launched Oct 2025) |
+
+## Why Gemma 4 E4B
+
+Gemma 4 comes in four variants. I chose **E4B** for these reasons:
+
+- **It's designed for edge deployment.** A recycling app gets used at the kitchen counter or trash room, sometimes with poor connectivity. E4B is optimized for mobile, edge, and browser environments — exactly the deployment context this app targets.
+- **Visual reasoning quality is sufficient for the task.** Identifying packaging types and assessing contamination doesn't require frontier-scale reasoning. E4B handles it well when paired with a detailed domain-specific system prompt.
+- **It demonstrates intentional model selection.** Anyone can wire up a 31B model via API. Choosing the variant Google designed for this exact use case is a deliberate match between problem and tool.
+- **Privacy story.** Recycling decisions involve photos of your home and trash. A model that *can* run on-device (E4B) is a better long-term fit than a model that must run on a server (31B Dense / 26B MoE).
+
+In this implementation, Gemma 4 E4B is called via the Hugging Face Inference API for ease of web deployment, but the same model and prompt can run locally via Ollama or MediaPipe — preserving the on-device potential for future iterations.
+
+## Tech stack
+
+- **Next.js 16** (App Router, TypeScript)
+- **Tailwind CSS** for styling
+- **Gemma 4 E4B** via Hugging Face Inference API
+- **Vercel** for deployment
+
+## Running locally
 
 ```bash
+# Clone the repo
+git clone https://github.com/YOUR-USERNAME/recycling-app.git
+cd recycling-app
+
+# Install dependencies
+npm install
+
+# Add your Hugging Face token
+echo "HUGGINGFACE_API_TOKEN=your_token_here" > .env.local
+
+# Run the dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project status
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This is a hackathon submission built solo in ~10 days. It's a working demo, not production software. Known limitations:
 
-## Learn More
+- Recycling rules vary by *gmina* (Polish municipality); the app uses general national guidelines
+- Not all bin types (especially purple textile bins) are available in every neighborhood yet
+- The kaucja symbol recognition depends on photo quality
+- Confidence calibration is rough — Gemma may be confidently wrong on unusual items
 
-To learn more about Next.js, take a look at the following resources:
+Future ideas: location-aware gmina-specific rules, integration with PSZOK location databases, on-device deployment via MediaPipe, multi-language support.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## About
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Built by Klaudia Grzondziel for the [`dev.to` Gemma 4 Challenge](https://dev.to/challenges/google-gemma-2026-05-06).
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+I'm a technical writer, not a developer — this is my first web app. AI coding assistance via [Claude Code](https://www.anthropic.com/claude-code) helped me bridge the gap from idea to working code. The product design, system prompt engineering, and Polish recycling knowledge are mine; the boilerplate code is mostly AI-assisted.
