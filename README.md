@@ -98,3 +98,7 @@ Future ideas: location-aware gmina-specific rules, integration with PSZOK locati
 Built by Klaudia Grzondziel for the [`dev.to` Gemma 4 Challenge](https://dev.to/challenges/google-gemma-2026-05-06).
 
 I'm a technical writer, not a developer — this is my first web app. AI coding assistance via [Claude Code](https://www.anthropic.com/claude-code) helped me bridge the gap from idea to working code. The product design, system prompt engineering, and Polish recycling knowledge are mine; the boilerplate code is mostly AI-assisted.
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
