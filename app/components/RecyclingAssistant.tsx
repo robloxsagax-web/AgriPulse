@@ -122,6 +122,9 @@ export default function RecyclingAssistant() {
           <br />
           do którego kosza go wrzucić.
         </p>
+        <p className="mt-3 px-2 text-xs leading-relaxed text-stone-400">
+          Aplikacja przeznaczona wyłącznie do oceny przedmiotów do segregacji odpadów. Zdjęcia nie są przechowywane.
+        </p>
       </header>
 
       <div className="w-full max-w-md space-y-4">
