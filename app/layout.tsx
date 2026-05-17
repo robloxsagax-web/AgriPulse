@@ -8,8 +8,8 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Recykling AI asystent",
-  description: "Polski asystent segregacji odpadów — zrób zdjęcie i dowiedz się, do którego kosza wyrzucić przedmiot.",
+  title: "Gdzie to wyrzucić?",
+  description: "Polski asystent segregacji odpadów. Zrób zdjęcie przedmiotu, a Gemma 4 powie ci, do którego kosza go wyrzucić.",
 };
 
 export default function RootLayout({

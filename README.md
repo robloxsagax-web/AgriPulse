@@ -1,11 +1,12 @@
-# Gdzie to wyrzucić? 🗑️
+# Gdzie to wyrzucić? 🗑️ [ENG: Where to throw it?]
 
 **A Polish recycling assistant powered by Gemma 4**
 
 Take a photo of any item — even contaminated or unusual ones — and find out which bin it belongs in. Built for the [`dev.to` Gemma 4 Challenge](https://dev.to/challenges/google-gemma-2026-05-06), May 2026.
 
-🔗 **Live demo:** [your-app-url.vercel.app](https://your-app-url.vercel.app)
-📝 **Write-up:** [`dev.to` article](https://dev.to/your-username/your-article-slug)
+🔗 **Live demo:** [gdzie-wyrzucic.vercel.app](https://gdzie-wyrzucic.vercel.app/)
+
+📝 **Write-up:** [`dev.to` article](TODO)
 
 ---
 
@@ -31,7 +32,7 @@ Existing apps in Poland are searchable databases — they require users to know 
 
 ## Categories supported
 
-The app classifies items into nine disposal categories matching Poland's current waste system:
+The app classifies items into eleven disposal categories matching Poland's current waste system:
 
 | Category | Bin color | Examples |
 |---|---|---|
@@ -44,6 +45,8 @@ The app classifies items into nine disposal categories matching Poland's current
 | `elektroodpady` | 🔴 Red | Small electronics, batteries |
 | `pszok` | — | Large/hazardous items (municipal drop-off) |
 | `kaucja` | — | Deposit-return bottles & cans (launched Oct 2025) |
+| `niewyrazne` | — | Photo too unclear to classify — prompts user to retake |
+| `niewaste` | — | Photo doesn't show a waste item |
 
 ## Why Gemma 4 E4B
 
@@ -54,18 +57,25 @@ Gemma 4 comes in four variants. I chose **E4B** for these reasons:
 - **It demonstrates intentional model selection.** Anyone can wire up a 31B model via API. Choosing the variant Google designed for this exact use case is a deliberate match between problem and tool.
 - **Privacy story.** Recycling decisions involve photos of your home and trash. A model that *can* run on-device (E4B) is a better long-term fit than a model that must run on a server (31B Dense / 26B MoE).
 
-In this implementation, Gemma 4 E4B is called via the Hugging Face Inference API for ease of web deployment, but the same model and prompt can run locally via Ollama or MediaPipe — preserving the on-device potential for future iterations.
+In this implementation, Gemma 4 E4B runs locally via Ollama, called from the Next.js API route through a configurable `OLLAMA_URL` (tunnelled via ngrok for the Vercel deployment). The same model could run fully on-device via MediaPipe in a future iteration — preserving the privacy story end to end.
 
 ## Tech stack
 
 - **Next.js 16** (App Router, TypeScript)
-- **Tailwind CSS** for styling
-- **Gemma 4 E4B** via Hugging Face Inference API
+- **Tailwind CSS v4** for styling
+- **Gemma 4 E4B** via Ollama
+- **ngrok** to expose local Ollama to Vercel's serverless functions
+- **Sharp** for server-side image resizing before inference
 - **Vercel** for deployment
 
 ## Running locally
 
+You need [Ollama](https://ollama.com) installed and the Gemma 4 E4B model pulled.
+
 ```bash
+# Pull the model (one-time, ~3 GB)
+ollama pull gemma4:e4b
+
 # Clone the repo
 git clone https://github.com/YOUR-USERNAME/recycling-app.git
 cd recycling-app
@@ -73,14 +83,16 @@ cd recycling-app
 # Install dependencies
 npm install
 
-# Add your Hugging Face token
-echo "HUGGINGFACE_API_TOKEN=your_token_here" > .env.local
+# Point the app at your local Ollama instance
+echo "OLLAMA_URL=http://localhost:11434" > .env.local
 
 # Run the dev server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> **Deploying to Vercel?** Ollama can't run on Vercel's serverless infrastructure. Expose your local Ollama via [ngrok](https://ngrok.com) (`ngrok http 11434`) and set `OLLAMA_URL` to the ngrok HTTPS URL in your Vercel environment variables.
 
 ## Project status
 

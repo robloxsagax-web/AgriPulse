@@ -69,25 +69,33 @@ Confidence levels must match the actual certainty of your answer:
 
    **If the photo clearly shows something that isn't waste** → use `niewaste` with `pewnosc: "wysoka"` (you're confident it's not waste; just confident the user shouldn't have asked).
 
-2. **Pure plant matter and food scraps without packaging → `bio`.** This includes: vegetable peels, fruit cores, fruit stems, coffee grounds, tea leaves (outside the bag), eggshells, plant stems, garden trimmings in small amounts, withered flowers, bread, leftover food. **Default to `bio`** for these. Only choose `zmieszane` if there's clear contamination or non-organic material attached.
+2. **Classify the object, not its former contents.** Always identify what the physical item in the photo *is* — its material — not what it held or contained.
+   - An empty wrapper is the wrapper (its material), not the food that was inside.
+   - An empty bottle is the bottle (its material), not the drink.
+   - A used tea bag is `bio` (or split: leaves to `bio`, synthetic pouch to `zmieszane`). A **tea bag wrapper/sachet** (the small foil packet the tea bag came in, before brewing) is `plastik_metal` — it is metallized plastic film, like a candy wrapper.
+   - An empty chip bag → `plastik_metal`. Do not default to `zmieszane` for "crumbs."
+   - An empty yogurt cup with traces → `plastik_metal` after rinsing. The residue is not the item.
 
-3. **Check for kaucja FIRST** on bottles and cans. If you can see the deposit symbol clearly, choose `kaucja`. If you can't tell from the photo, default to `plastik_metal` or `szklo` and add a `uwaga_dodatkowa` note: "Sprawdź, czy butelka ma symbol kaucji — jeśli tak, możesz oddać ją w sklepie i odzyskać kaucję."
+3. **Pure plant matter and food scraps without packaging → `bio`.** This includes: vegetable peels, fruit cores, fruit stems, coffee grounds, tea leaves (outside the bag), eggshells, plant stems, garden trimmings in small amounts, withered flowers, bread, leftover food. **Default to `bio`** for these. Only choose `zmieszane` if there's clear contamination or non-organic material attached.
 
-4. **Composite materials look like one material but aren't.** Specifically watch for:
+4. **Check for kaucja FIRST** on bottles and cans. If you can see the deposit symbol clearly, choose `kaucja`. If you can't tell from the photo, default to `plastik_metal` or `szklo` and add a `uwaga_dodatkowa` note: "Sprawdź, czy butelka ma symbol kaucji — jeśli tak, możesz oddać ją w sklepie i odzyskać kaucję."
+
+5. **Composite materials look like one material but aren't.** Specifically watch for:
    - **Blister packs (pill packaging)**: foil + plastic composite → `zmieszane`. Even if the photo only shows the foil side, look for irregular bumps, perforations, or thin curved shapes — these suggest blister pack rather than pure foil.
    - **Tea bags**: traditional paper tea bags with leaves → `bio` (the whole bag including string and staple). Synthetic/pyramid tea bags → tear open, leaves to `bio`, pouch to `zmieszane`.
+   - **Tea bag wrappers/sachets** (single-serve foil packets, before brewing): metallized plastic → `plastik_metal`. Different from the tea bag itself.
    - **Paper coffee cups**: plastic-lined → `zmieszane`, not `papier`.
    - **Tetra Pak (juice/milk cartons)**: → `plastik_metal`, despite paper exterior.
    - **Candy/snack wrappers (metalized plastic)**: → `plastik_metal`. They look like foil but are mostly plastic.
    - **Pure aluminum foil (food wrapping)**: → `plastik_metal`. Clean only.
 
-5. **Small electronics and batteries → `elektroodpady`**, not `pszok`. Mention convenient options (supermarket boxes, electronics stores) in `uwaga_dodatkowa`. PSZOK is a fallback worth mentioning.
+6. **Small electronics and batteries → `elektroodpady`**, not `pszok`. Mention convenient options (supermarket boxes, electronics stores) in `uwaga_dodatkowa`. PSZOK is a fallback worth mentioning.
 
-6. **Large electronics, hazardous chemicals, tires, bulky items → `pszok`.**
+7. **Large electronics, hazardous chemicals, tires, bulky items → `pszok`.**
 
-7. **Used clothing and shoes → `tekstylia`** with a note that purple bins aren't yet everywhere; if unavailable, donate usable items or use `pszok`.
+8. **Used clothing and shoes → `tekstylia`** with a note that purple bins aren't yet everywhere; if unavailable, donate usable items or use `pszok`.
 
-8. **Contaminated containers**: clean container → its material bin. Heavily soiled and impossible to clean → `zmieszane`. Always mention this tradeoff in `uwaga_dodatkowa` when relevant.
+9. **Contaminated containers**: clean container → its material bin. Heavily soiled and impossible to clean → `zmieszane`. Always mention this tradeoff in `uwaga_dodatkowa` when relevant.
 
 ## Specific edge cases — reference table
 
@@ -116,6 +124,7 @@ Confidence levels must match the actual certainty of your answer:
 - Blister pack from pills → `zmieszane`.
 - Candy/snack wrappers (metalized plastic) → `plastik_metal`.
 - Pure aluminum foil (clean) → `plastik_metal`.
+- Tea bag wrappers/sachets (single-serve foil packets that held a tea bag before brewing) → `plastik_metal`. Metallized plastic, same as candy wrappers. NOT `bio`.
 
 ### Tissues, napkins, hygiene
 
