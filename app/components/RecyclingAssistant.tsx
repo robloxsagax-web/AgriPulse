@@ -122,9 +122,6 @@ export default function RecyclingAssistant() {
           <br />
           do którego kosza go wrzucić.
         </p>
-        <p className="mt-3 px-2 text-xs leading-relaxed text-stone-400">
-          Aplikacja przeznaczona wyłącznie do oceny przedmiotów do segregacji odpadów. Zdjęcia nie są przechowywane.
-        </p>
       </header>
 
       <div className="w-full max-w-md space-y-4">
@@ -173,6 +170,11 @@ export default function RecyclingAssistant() {
               <p className="px-6 text-center text-xs text-red-500">{cameraError}</p>
             )}
           </div>
+        )}
+        {view === 'idle' && (
+          <p className="text-center text-xs leading-relaxed text-stone-400">
+            Aplikacja przeznaczona wyłącznie do oceny przedmiotów do segregacji odpadów. Zdjęcia nie są przechowywane.
+          </p>
         )}
 
         {view === 'camera' && (
