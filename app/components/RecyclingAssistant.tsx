@@ -3,10 +3,26 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 
 type ViewState = 'idle' | 'camera' | 'preview'
+type AnalyzeState = 'idle' | 'loading' | 'done' | 'error'
+type Confidence = 'wysoka' | 'srednia' | 'niska'
 
 export type BinId =
   | 'yellow' | 'blue' | 'green' | 'brown' | 'gray'
   | 'purple' | 'red' | 'pszok' | 'kaucja'
+
+type Kategoria =
+  | 'plastik_metal' | 'papier' | 'szklo' | 'bio' | 'zmieszane'
+  | 'tekstylia' | 'elektroodpady' | 'pszok' | 'kaucja' | 'nieznane'
+
+type ApiResult = {
+  kategoria: Kategoria
+  pewnosc: Confidence
+  nazwa_przedmiotu: string
+  jak_przygotowac: string
+  wyjasnienie: string
+  uwaga_dodatkowa: string | null
+  potrzebne_doprecyzowanie: string | null
+}
 
 interface BinInfo {
   dot: string
@@ -34,15 +50,32 @@ export const BIN_CONFIG: Record<BinId, BinInfo> = {
 
 const BIN_ORDER: BinId[] = ['yellow', 'blue', 'green', 'brown', 'gray', 'purple', 'red', 'pszok', 'kaucja']
 
+const KATEGORIA_TO_BIN: Record<Exclude<Kategoria, 'nieznane'>, BinId> = {
+  plastik_metal: 'yellow',
+  papier:        'blue',
+  szklo:         'green',
+  bio:           'brown',
+  zmieszane:     'gray',
+  tekstylia:     'purple',
+  elektroodpady: 'red',
+  pszok:         'pszok',
+  kaucja:        'kaucja',
+}
+
 export default function RecyclingAssistant() {
   const [view, setView] = useState<ViewState>('idle')
   const [photo, setPhoto] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
   const [showCameraFallback, setShowCameraFallback] = useState(false)
+  const [analyzeState, setAnalyzeState] = useState<AnalyzeState>('idle')
+  const [analyzeResult, setAnalyzeResult] = useState<ApiResult | null>(null)
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null)
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const imageBlobRef = useRef<Blob | null>(null)
+
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop())
     streamRef.current = null
@@ -50,18 +83,22 @@ export default function RecyclingAssistant() {
 
   useEffect(() => () => stopCamera(), [stopCamera])
 
-  function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setPhoto(URL.createObjectURL(file))
-    setView('preview')
-  }
-
   useEffect(() => {
     if (view === 'camera' && videoRef.current && streamRef.current) {
       videoRef.current.srcObject = streamRef.current
     }
   }, [view])
+
+  function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    imageBlobRef.current = file
+    setPhoto(URL.createObjectURL(file))
+    setView('preview')
+    setAnalyzeState('idle')
+    setAnalyzeResult(null)
+    setAnalyzeError(null)
+  }
 
   async function openCamera() {
     setCameraError(null)
@@ -92,18 +129,53 @@ export default function RecyclingAssistant() {
       (blob) => {
         if (!blob) return
         stopCamera()
+        imageBlobRef.current = blob
         setPhoto(URL.createObjectURL(blob))
         setView('preview')
+        setAnalyzeState('idle')
+        setAnalyzeResult(null)
+        setAnalyzeError(null)
       },
       'image/jpeg',
       0.92,
     )
   }
 
-  function handleRetake() {
+  function handleReset() {
     if (photo) URL.revokeObjectURL(photo)
+    imageBlobRef.current = null
     setPhoto(null)
     setView('idle')
+    setAnalyzeState('idle')
+    setAnalyzeResult(null)
+    setAnalyzeError(null)
+  }
+
+  async function handleAnalyze() {
+    const blob = imageBlobRef.current
+    if (!blob) return
+    setAnalyzeState('loading')
+    setAnalyzeResult(null)
+    setAnalyzeError(null)
+
+    const formData = new FormData()
+    formData.append('image', blob, 'photo.jpg')
+
+    try {
+      const res = await fetch('/api/classify', { method: 'POST', body: formData })
+      const data: unknown = await res.json()
+      if (!res.ok) {
+        const msg = (data as { error?: string })?.error ?? 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.'
+        setAnalyzeError(msg)
+        setAnalyzeState('error')
+        return
+      }
+      setAnalyzeResult(data as ApiResult)
+      setAnalyzeState('done')
+    } catch {
+      setAnalyzeError('Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.')
+      setAnalyzeState('error')
+    }
   }
 
   return (
@@ -125,6 +197,7 @@ export default function RecyclingAssistant() {
       </header>
 
       <div className="w-full max-w-md space-y-4">
+
         {view === 'idle' && (
           <div className="flex flex-col items-center gap-5 rounded-2xl border-2 border-dashed border-green-200 bg-white py-12 shadow-sm">
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-green-600">
@@ -219,26 +292,68 @@ export default function RecyclingAssistant() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
             <div className="flex gap-2 p-3">
-              <button
-                onClick={handleRetake}
-                className="flex-1 rounded-full border border-stone-200 py-2.5 text-sm font-medium text-stone-600 transition-colors active:bg-stone-50"
-              >
-                Zrób ponownie
-              </button>
-              <button
-                disabled
-                className="flex flex-1 cursor-not-allowed items-center justify-center gap-1.5 rounded-full bg-green-600 py-2.5 text-sm font-semibold text-white opacity-40"
-              >
-                <SparkleIcon className="h-4 w-4" />
-                Analizuj
-              </button>
+              {analyzeState === 'done' ? (
+                <button
+                  onClick={handleReset}
+                  className="flex-1 rounded-full bg-green-600 py-2.5 text-sm font-semibold text-white transition-transform active:scale-95"
+                >
+                  Sprawdź inny przedmiot
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={handleReset}
+                    disabled={analyzeState === 'loading'}
+                    className="flex-1 rounded-full border border-stone-200 py-2.5 text-sm font-medium text-stone-600 transition-colors active:bg-stone-50 disabled:opacity-40"
+                  >
+                    Zrób ponownie
+                  </button>
+                  <button
+                    onClick={handleAnalyze}
+                    disabled={analyzeState === 'loading'}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-green-600 py-2.5 text-sm font-semibold text-white shadow-md transition-transform active:scale-95 disabled:opacity-60"
+                  >
+                    {analyzeState === 'loading' ? (
+                      <>
+                        <SpinnerIcon className="h-4 w-4 animate-spin" />
+                        Analizuję...
+                      </>
+                    ) : (
+                      <>
+                        <SparkleIcon className="h-4 w-4" />
+                        {analyzeState === 'error' ? 'Spróbuj ponownie' : 'Analizuj'}
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
 
         <canvas ref={canvasRef} className="hidden" />
 
-        <ResultCardPlaceholder />
+        {analyzeState === 'loading' && <LoadingCard />}
+
+        {analyzeState === 'error' && analyzeError && (
+          <ErrorCard message={analyzeError} />
+        )}
+
+        {analyzeState === 'done' && analyzeResult && (
+          analyzeResult.kategoria === 'nieznane'
+            ? <UnknownItemCard />
+            : (
+              <ResultCard
+                binId={KATEGORIA_TO_BIN[analyzeResult.kategoria as Exclude<Kategoria, 'nieznane'>]}
+                nazwaObiektu={analyzeResult.nazwa_przedmiotu}
+                pewnosc={analyzeResult.pewnosc}
+                jakPrzygotowac={analyzeResult.jak_przygotowac}
+                wyjasnienie={analyzeResult.wyjasnienie}
+                uwagaDodatkowa={analyzeResult.uwaga_dodatkowa ?? undefined}
+                potrzebneDoprecyzowanie={analyzeResult.potrzebne_doprecyzowanie ?? undefined}
+              />
+            )
+        )}
 
         <div className="rounded-2xl bg-white p-5 shadow-sm">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-400">
@@ -259,49 +374,96 @@ export default function RecyclingAssistant() {
             })}
           </div>
         </div>
+
       </div>
     </main>
   )
 }
 
-type Confidence = 'wysoka' | 'srednia' | 'niska'
-
 const CONFIDENCE_STYLES: Record<Confidence, { badge: string; label: string }> = {
-  wysoka:  { badge: 'bg-green-100 text-green-700',  label: 'Wysoka pewność' },
-  srednia: { badge: 'bg-amber-100 text-amber-700',  label: 'Średnia pewność' },
-  niska:   { badge: 'bg-red-100   text-red-600',    label: 'Niska pewność' },
+  wysoka:  { badge: 'bg-green-100 text-green-700', label: 'Wysoka pewność' },
+  srednia: { badge: 'bg-amber-100 text-amber-700', label: 'Średnia pewność' },
+  niska:   { badge: 'bg-red-100 text-red-600',     label: 'Niska pewność' },
+}
+
+function LoadingCard() {
+  return (
+    <div className="flex flex-col items-center gap-4 rounded-2xl bg-white p-8 shadow-sm">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+      <div className="text-center">
+        <p className="text-sm font-semibold text-stone-700">Analizuję zdjęcie...</p>
+        <p className="mt-1 text-xs text-stone-400">To może potrwać 15–30 sekund</p>
+      </div>
+    </div>
+  )
+}
+
+function ErrorCard({ message }: { message: string }) {
+  return (
+    <div className="rounded-2xl bg-white p-5 shadow-sm">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-400">
+        Wynik analizy
+      </p>
+      <div className="rounded-xl bg-red-50 px-4 py-3">
+        <p className="text-sm leading-relaxed text-red-700">{message}</p>
+      </div>
+    </div>
+  )
+}
+
+function UnknownItemCard() {
+  return (
+    <div className="space-y-3 rounded-2xl bg-white p-5 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
+        Wynik analizy
+      </p>
+      <div className="flex items-center gap-3">
+        <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-full bg-stone-200 shadow-md">
+          <span className="text-2xl leading-none text-stone-400">?</span>
+        </div>
+        <div>
+          <p className="font-bold text-stone-800">Nierozpoznany przedmiot</p>
+          <span className="mt-1 inline-block rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-semibold text-stone-500">
+            Niska pewność
+          </span>
+        </div>
+      </div>
+      <p className="text-sm leading-relaxed text-stone-600">
+        Nie udało mi się rozpoznać przedmiotu do segregacji. Spróbuj zrobić wyraźniejsze zdjęcie z bliska, na prostym tle.
+      </p>
+    </div>
+  )
 }
 
 function ResultCard({
   binId,
   nazwaObiektu,
   pewnosc,
-  instrukcja,
+  jakPrzygotowac,
+  wyjasnienie,
   uwagaDodatkowa,
-  wskazowka,
   potrzebneDoprecyzowanie,
 }: {
   binId: BinId
   nazwaObiektu: string
   pewnosc: Confidence
-  instrukcja: string
+  jakPrzygotowac: string
+  wyjasnienie: string
   uwagaDodatkowa?: string
-  wskazowka: string
   potrzebneDoprecyzowanie?: string
 }) {
   const bin = BIN_CONFIG[binId]
   const conf = CONFIDENCE_STYLES[pewnosc]
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-sm space-y-3">
+    <div className="space-y-3 rounded-2xl bg-white p-5 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
         Wynik analizy
       </p>
 
-      {/* Bin header + confidence badge */}
       <div className="flex items-start gap-3">
         <ResultCardBinIcon binId={binId} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
             <p className="font-bold text-stone-800">{bin.fullName}</p>
             <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${conf.badge}`}>
               {conf.label}
@@ -311,12 +473,10 @@ function ResultCard({
         </div>
       </div>
 
-      {/* nazwa_przedmiotu */}
       <p className="text-xs text-stone-400">
         Zidentyfikowano: <span className="font-medium text-stone-600">{nazwaObiektu}</span>
       </p>
 
-      {/* potrzebne_doprecyzowanie */}
       {potrzebneDoprecyzowanie && (
         <div className="rounded-xl bg-sky-50 px-4 py-3">
           <p className="mb-1 text-xs font-semibold text-sky-700">Potrzebne doprecyzowanie</p>
@@ -324,10 +484,8 @@ function ResultCard({
         </div>
       )}
 
-      {/* jak_przygotowac */}
-      <p className="text-sm leading-relaxed text-stone-600">{instrukcja}</p>
+      <p className="text-sm leading-relaxed text-stone-600">{jakPrzygotowac}</p>
 
-      {/* uwaga_dodatkowa */}
       {uwagaDodatkowa && (
         <div className="rounded-xl bg-amber-50 px-4 py-3">
           <p className="mb-1 text-xs font-semibold text-amber-700">Uwaga</p>
@@ -335,79 +493,9 @@ function ResultCard({
         </div>
       )}
 
-      {/* wskazowka */}
       <div className="rounded-xl bg-green-50 px-4 py-3">
-        <p className="mb-1 text-xs font-semibold text-green-700">Wskazówka</p>
-        <p className="text-xs leading-relaxed text-green-800">{wskazowka}</p>
-      </div>
-
-    </div>
-  )
-}
-
-type PlaceholderExample = {
-  binId: BinId
-  nazwaObiektu: string
-  pewnosc: Confidence
-  instrukcja: string
-  uwagaDodatkowa?: string
-  wskazowka: string
-  potrzebneDoprecyzowanie?: string
-}
-
-const PLACEHOLDER_EXAMPLES: PlaceholderExample[] = [
-  {
-    binId: 'yellow',
-    nazwaObiektu: 'Butelka plastikowa PET 0,5 l',
-    pewnosc: 'wysoka',
-    instrukcja: 'Butelki PET, opakowania plastikowe oraz puszki aluminiowe i stalowe wrzucamy do żółtego pojemnika. Opróżnij i zgnieć przed wyrzuceniem.',
-    uwagaDodatkowa: 'Jeśli nakrętka jest z innego tworzywa niż butelka, możesz ją odkręcić i wrzucić osobno — też do żółtego kosza.',
-    wskazowka: 'Nie musisz myć opakowania — wystarczy że będzie puste i suche. Zgnieć butelkę, żeby zaoszczędzić miejsce w koszu.',
-  },
-  {
-    binId: 'kaucja',
-    nazwaObiektu: 'Szklana butelka z oznaczeniem kaucji',
-    pewnosc: 'srednia',
-    instrukcja: 'Butelki objęte systemem kaucyjnym należy zwrócić do sklepu — nie wrzucać do kosza. Możesz oddać je w automacie RVM lub przy kasie w wyznaczonych sklepach.',
-    wskazowka: 'Sprawdź etykietę lub nakrywkę — jeśli widzisz symbol kaucji i kwotę (np. 0,50 zł), butelka podlega zwrotowi i możesz odzyskać pieniądze.',
-    potrzebneDoprecyzowanie: 'Czy na butelce widoczne jest oznaczenie kaucji (symbol i kwota)? Jeśli nie, może ona trafić do zielonego kosza na szkło.',
-  },
-  {
-    binId: 'red',
-    nazwaObiektu: 'Ładowarka do telefonu USB-C',
-    pewnosc: 'wysoka',
-    instrukcja: 'Elektroodpady (kable, ładowarki, elektronika) wymagają specjalnego przetworzenia. Oddaj do oznaczonego punktu w sklepie RTV/AGD lub do PSZOK — nigdy do zwykłego kosza.',
-    uwagaDodatkowa: 'Jeśli urządzenie zawiera baterię, upewnij się że nie jest uszkodzona lub spuchnięta — uszkodzone baterie oddaj osobno jako odpady niebezpieczne.',
-    wskazowka: 'Wiele supermarketów i sklepów elektronicznych ma pojemniki na małe elektroodpady przy wejściu — to najwygodniejsza opcja w codziennych zakupach.',
-  },
-  {
-    binId: 'gray',
-    nazwaObiektu: 'Opakowanie wielomateriałowe (karton + folia)',
-    pewnosc: 'niska',
-    instrukcja: 'Opakowania wielomateriałowe (np. kartony po sokach i mleku z warstwą folii lub aluminium) wrzucamy do szarego kosza na odpady zmieszane, jeśli gmina nie prowadzi osobnej zbiórki.',
-    uwagaDodatkowa: 'W niektórych gminach opakowania Tetra Pak zbierane są osobno — razem z papierem lub plastikiem. Zasady różnią się w zależności od miejscowości.',
-    wskazowka: 'Zgnieć karton i zdejmij nakrętkę przed wyrzuceniem. Nakrętkę wrzuć do żółtego kosza.',
-    potrzebneDoprecyzowanie: 'Czy opakowanie ma warstwę folii lub aluminium wewnątrz (np. karton po mleku lub soku)? To decyduje, czy trafi do papieru czy do odpadów zmieszanych.',
-  },
-]
-
-function ResultCardPlaceholder() {
-  const [index, setIndex] = useState(0)
-  const example = PLACEHOLDER_EXAMPLES[index]
-
-  return (
-    <div className="space-y-2">
-      <ResultCard {...example} />
-      <div className="flex items-center justify-between px-1">
-        <span className="text-xs italic text-stone-300">
-          Przykład {index + 1} z {PLACEHOLDER_EXAMPLES.length} — połączenie z Gemma wkrótce
-        </span>
-        <button
-          onClick={() => setIndex((i) => (i + 1) % PLACEHOLDER_EXAMPLES.length)}
-          className="py-2 px-3 text-xs font-medium text-stone-400 transition-colors hover:text-stone-600"
-        >
-          Następny →
-        </button>
+        <p className="mb-1 text-xs font-semibold text-green-700">Wyjaśnienie</p>
+        <p className="text-xs leading-relaxed text-green-800">{wyjasnienie}</p>
       </div>
     </div>
   )
@@ -416,18 +504,13 @@ function ResultCardPlaceholder() {
 function ResultCardBinIcon({ binId }: { binId: BinId }) {
   const bin = BIN_CONFIG[binId]
   return (
-    <div
-      className={`flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-full shadow-md ${bin.bg}`}
-    >
+    <div className={`flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-full shadow-md ${bin.bg}`}>
       {bin.iconType === 'building' ? (
         <BuildingIcon className="h-7 w-7 text-white" />
       ) : bin.iconType === 'return' ? (
         <ReturnIcon className="h-7 w-7 text-white" />
       ) : (
-        <span
-          className="text-white leading-none select-none"
-          style={{ fontSize: '28px', fontFamily: 'system-ui, sans-serif' }}
-        >
+        <span className="select-none leading-none text-white" style={{ fontSize: '28px', fontFamily: 'system-ui, sans-serif' }}>
           {'♻︎'}
         </span>
       )}
@@ -499,6 +582,15 @@ function SparkleIcon({ className = 'h-4 w-4' }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+    </svg>
+  )
+}
+
+function SpinnerIcon({ className = 'h-4 w-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
+      <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
     </svg>
   )
 }
