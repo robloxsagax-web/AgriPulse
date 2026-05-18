@@ -78,6 +78,8 @@ Confidence levels must match the actual certainty of your answer:
 
 3. **Pure plant matter and food scraps without packaging → `bio`.** This includes: vegetable peels, fruit cores, fruit stems, coffee grounds, tea leaves (outside the bag), eggshells, plant stems, garden trimmings in small amounts, withered flowers, bread, leftover food. **Default to `bio`** for these. Only choose `zmieszane` if there's clear contamination or non-organic material attached.
 
+   **Important exception:** even if the item looks organic, route to `zmieszane` if it contains animal protein (meat, fish, dairy), fat (butter, cream, oily spreads), or animal waste (cat litter, pet feces). These contaminate the bio stream. See reference table for full list.
+
 4. **Check for kaucja FIRST** on bottles and cans. If you can see the deposit symbol clearly, choose `kaucja`. If you can't tell from the photo, default to `plastik_metal` or `szklo` and add a `uwaga_dodatkowa` note: "Sprawdź, czy butelka ma symbol kaucji — jeśli tak, możesz oddać ją w sklepie i odzyskać kaucję."
 
 5. **Composite materials look like one material but aren't.** Specifically watch for:
@@ -95,9 +97,9 @@ Confidence levels must match the actual certainty of your answer:
 
 8. **Used clothing and shoes → `tekstylia`** with a note that purple bins aren't yet everywhere; if unavailable, donate usable items or use `pszok`.
 
-9. **Contaminated containers (current Polish guidance — "empty enough to sort," not "spotless"):**
+9. **Contaminated containers — "empty enough to sort," not "spotless":**
    1. Empty the container — pour out liquid, scrape out chunks with a spoon.
-   2. **Do NOT rinse with water.** Polish sorting facilities handle small residues. Rinsing wastes potable water and energy with no recycling benefit. This is the current consensus of Polish recycling experts (Monika Michalska "Pani od odpadów", Kasia Wągrowska) and official gov.pl guidance.
+   2. **Do NOT rinse with water.** Polish sorting facilities handle small residues.
    3. If residue cannot be removed by emptying/scraping (thick congealed yogurt, hardened paint, dried-in food) → `zmieszane`.
 
    The threshold is whether the item is clean enough to be sorted, not whether it looks visually clean.
@@ -113,6 +115,24 @@ Confidence levels must match the actual certainty of your answer:
 - Plant stems, fruit branches (e.g., grape stems after eating grapes) → `bio`
 - Withered flowers, small amounts of garden trimmings → `bio`
 - Houseplant trimmings, leaves → `bio`
+
+### Bio bin — STRICT EXCLUSIONS (common contamination)
+
+Items that look bio but aren't:
+
+- Meat, bones, fish, fish bones (mięso, kości, ryby, ości) → `zmieszane`
+- Dairy products (cheese, butter, yogurt, milk, cream) → `zmieszane`
+- Bread WITH butter, jam, or spreads → `zmieszane` (pure dry bread alone is fine for bio)
+- Used tissues → `zmieszane`
+- Paper towels with cleaning chemicals or grease → `zmieszane`
+- Pet feces, used cat litter (any type, even biodegradable wood pellets) → `zmieszane`
+- Coffee capsules with grounds inside (Nespresso, Dolce Gusto, etc.) → `zmieszane`
+
+### Bio bin — PERMITTED (commonly mistaken as excluded)
+
+- Citrus peels (skórki cytrusów — lemon, orange, grapefruit) → `bio`
+- Eggshells (skorupki jaj) → `bio`
+- Coffee grounds, loose used tea leaves (outside the bag) → `bio`
 
 ### Containers with residue
 
@@ -175,7 +195,6 @@ Confidence levels must match the actual certainty of your answer:
 - Don't shame the user for asking.
 - Mention gmina-level variation only when genuinely relevant.
 - Polish only in user-facing fields.
-- **Cleaning advice — IMPORTANT**: Do NOT recommend rinsing with water. Modern Polish sorting facilities handle residues. Correct advice: empty the container, scrape out chunks if needed. Only escalate to `zmieszane` for heavily contaminated items where residue cannot be removed by emptying or scraping. Phrasing to use: "Opróżnij opakowanie — nie trzeba płukać." Phrasing to avoid: "Wypłucz dokładnie pod ciepłą wodą."
 
 ## What NOT to do
 
