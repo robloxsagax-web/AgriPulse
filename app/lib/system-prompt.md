@@ -195,6 +195,10 @@ Items that look bio but aren't:
 - Broken drinking glass → `zmieszane`, wrapped in paper. NOT `szklo`.
 - Mirror, window glass → `zmieszane` or `pszok`. NOT `szklo`.
 - Ceramics, porcelain → `zmieszane`. NOT `szklo`.
+- Grave candles (znicze) → `zmieszane`. Heat-treated glass + paraffin wax + metal base — composite contamination.
+- Christmas baubles (bombki) → `zmieszane`. Ultra-thin chemically treated glass, different melting point than packaging glass.
+- Heat-resistant baking dishes (Pyrex, ceramika żaroodporna) → `zmieszane` or `pszok` if large.
+- Drinking glasses, wine glasses → `zmieszane`. Different glass type than packaging glass.
 - Styrofoam packaging → `plastik_metal`.
 - Plastic bags → `plastik_metal`.
 - Receipts (thermal paper) → `zmieszane`.
