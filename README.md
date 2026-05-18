@@ -18,7 +18,7 @@ Recycling rules in Poland confuse even people who care. The hard cases aren't "p
 - A pizza box with grease on the bottom
 - A pet food can with dried residue
 - Old electronics: where exactly do they go?
-- The new deposit system (kaucja, since October 2025) — which bottles qualify?
+- The new deposit system (kaucja, launching January 2026) — which bottles qualify?
 - The new purple textile bins (mandatory since January 2025)
 
 Existing apps in Poland are searchable databases — they require users to know what an item is called in Polish, and they often miss edge cases. This app uses Gemma 4's vision capabilities to **look at the item and reason about it**, including its condition.
@@ -32,7 +32,7 @@ Existing apps in Poland are searchable databases — they require users to know 
 
 ## Categories supported
 
-The app classifies items into eleven disposal categories matching Poland's current waste system:
+The app classifies items into twelve disposal categories matching Poland's current waste system:
 
 | Category | Bin color | Examples |
 |---|---|---|
@@ -44,9 +44,10 @@ The app classifies items into eleven disposal categories matching Poland's curre
 | `tekstylia` | 🟣 Purple | Clothes, shoes (separate collection mandatory since Jan 2025) |
 | `elektroodpady` | 🔴 Red | Small electronics, batteries |
 | `pszok` | — | Large/hazardous items (municipal drop-off) |
-| `kaucja` | — | Deposit-return bottles & cans (launched Oct 2025) |
+| `kaucja` | — | Deposit-return bottles & cans (launching January 2026) |
 | `niewyrazne` | — | Photo too unclear to classify — prompts user to retake |
 | `niewaste` | — | Photo doesn't show a waste item |
+| `apteka` | — | Expired or unused medications — pharmacy drop-off |
 
 ## Why Gemma 4 26B MoE
 
