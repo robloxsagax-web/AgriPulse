@@ -26,7 +26,7 @@ Existing apps in Poland are searchable databases — they require users to know 
 ## How it works
 
 1. User takes a photo of an item with their phone camera
-2. The app sends the photo to Gemma 4 (E4B variant) along with a detailed system prompt encoding Polish recycling rules
+2. The app sends the photo to Gemma 4 26B Mixture-of-Experts via Google AI Studio API, along with a detailed system prompt encoding Polish recycling rules
 3. Gemma returns structured JSON: bin category, preparation steps, explanation, edge-case notes
 4. The app displays the result with the corresponding bin color
 
@@ -48,34 +48,28 @@ The app classifies items into eleven disposal categories matching Poland's curre
 | `niewyrazne` | — | Photo too unclear to classify — prompts user to retake |
 | `niewaste` | — | Photo doesn't show a waste item |
 
-## Why Gemma 4 E4B
+## Why Gemma 4 26B MoE
 
-Gemma 4 comes in four variants. I chose **E4B** for these reasons:
+Gemma 4 comes in four variants. I chose **26B MoE** (`gemma-4-26b-a4b-it`) for these reasons:
 
-- **It's designed for edge deployment.** A recycling app gets used at the kitchen counter or trash room, sometimes with poor connectivity. E4B is optimized for mobile, edge, and browser environments — exactly the deployment context this app targets.
-- **Visual reasoning quality is sufficient for the task.** Identifying packaging types and assessing contamination doesn't require frontier-scale reasoning. E4B handles it well when paired with a detailed domain-specific system prompt.
-- **It demonstrates intentional model selection.** Anyone can wire up a 31B model via API. Choosing the variant Google designed for this exact use case is a deliberate match between problem and tool.
-- **Privacy story.** Recycling decisions involve photos of your home and trash. A model that *can* run on-device (E4B) is a better long-term fit than a model that must run on a server (31B Dense / 26B MoE).
-
-In this implementation, Gemma 4 E4B runs locally via Ollama, called from the Next.js API route through a configurable `OLLAMA_URL` (tunnelled via ngrok for the Vercel deployment). The same model could run fully on-device via MediaPipe in a future iteration — preserving the privacy story end to end.
+- **Production-quality reasoning at edge-class compute.** The 26B MoE architecture activates only ~4B parameters per token, so it reasons at 26B-class quality while running at roughly E4B cost. Hard recycling edge cases — composite packaging, contaminated containers, blister packs photographed from the foil side — benefit from the larger knowledge base.
+- **Better accuracy on ambiguous items.** Classifying items correctly matters more than classification speed here. The 26B MoE handles material composition, contamination tradeoffs, and subtle visual cues more reliably than smaller variants.
+- **Free hosting via Google AI Studio enables 24/7 availability.** No local infrastructure, no tunnel, no cold-start latency — the demo runs as a standard Vercel serverless function calling a managed API.
+- **The on-device story still holds.** During development I tested E4B locally via Ollama to validate that the smaller variant can handle the task on-device. The deployment choice (cloud-hosted 26B) is separate from the capability story: E4B works on-device too, making a future MediaPipe or local-Ollama deployment viable without rewriting the system prompt.
 
 ## Tech stack
 
 - **Next.js 16** (App Router, TypeScript)
 - **Tailwind CSS v4** for styling
-- **Gemma 4 E4B** via Ollama
-- **ngrok** to expose local Ollama to Vercel's serverless functions
+- **Gemma 4 26B MoE** (`gemma-4-26b-a4b-it`) via Google AI Studio API
 - **Sharp** for server-side image resizing before inference
 - **Vercel** for deployment
 
 ## Running locally
 
-You need [Ollama](https://ollama.com) installed and the Gemma 4 E4B model pulled.
+You need a [Google AI Studio](https://aistudio.google.com) API key (free tier available).
 
 ```bash
-# Pull the model (one-time, ~3 GB)
-ollama pull gemma4:e4b
-
 # Clone the repo
 git clone https://github.com/YOUR-USERNAME/recycling-app.git
 cd recycling-app
@@ -83,8 +77,9 @@ cd recycling-app
 # Install dependencies
 npm install
 
-# Point the app at your local Ollama instance
-echo "OLLAMA_URL=http://localhost:11434" > .env.local
+# Set your Google AI Studio credentials
+echo "GOOGLE_API_KEY=your_key_here" >> .env.local
+echo "GOOGLE_MODEL=gemma-4-26b-a4b-it" >> .env.local
 
 # Run the dev server
 npm run dev
@@ -92,7 +87,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-> **Deploying to Vercel?** Ollama can't run on Vercel's serverless infrastructure. Expose your local Ollama via [ngrok](https://ngrok.com) (`ngrok http 11434`) and set `OLLAMA_URL` to the ngrok HTTPS URL in your Vercel environment variables.
+> **Deploying to Vercel?** Add `GOOGLE_API_KEY` and `GOOGLE_MODEL` as environment variables in your Vercel project settings.
 
 ## Project status
 
