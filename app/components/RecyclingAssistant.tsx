@@ -8,11 +8,11 @@ type Confidence = 'wysoka' | 'srednia' | 'niska'
 
 export type BinId =
   | 'yellow' | 'blue' | 'green' | 'brown' | 'gray'
-  | 'purple' | 'red' | 'pszok' | 'kaucja'
+  | 'purple' | 'red' | 'pszok' | 'kaucja' | 'apteka'
 
 type Kategoria =
   | 'plastik_metal' | 'papier' | 'szklo' | 'bio' | 'zmieszane'
-  | 'tekstylia' | 'elektroodpady' | 'pszok' | 'kaucja' | 'niewyrazne' | 'niewaste'
+  | 'tekstylia' | 'elektroodpady' | 'pszok' | 'kaucja' | 'niewyrazne' | 'niewaste' | 'apteka'
 
 type ApiResult = {
   kategoria: Kategoria
@@ -29,7 +29,7 @@ interface BinInfo {
   bg: string
   hex: string
   textColor: string
-  iconType: 'bin' | 'building' | 'return'
+  iconType: 'bin' | 'building' | 'return' | 'pharmacy'
   name: string
   fullName: string
   desc: string
@@ -45,10 +45,11 @@ export const BIN_CONFIG: Record<BinId, BinInfo> = {
   purple: { dot: 'bg-purple-500', bg: 'bg-purple-500', hex: '#a855f7', textColor: 'text-purple-500', iconType: 'bin',      name: 'Fioletowy', fullName: 'Fioletowy kosz', desc: 'Tekstylia',                            icon: '👕' },
   red:    { dot: 'bg-red-500',    bg: 'bg-red-500',    hex: '#ef4444', textColor: 'text-red-500',    iconType: 'bin',      name: 'Czerwony',  fullName: 'Czerwony kosz',  desc: 'Elektroodpady',                        icon: '🔌' },
   pszok:  { dot: 'bg-orange-500', bg: 'bg-orange-500', hex: '#f97316', textColor: 'text-orange-500', iconType: 'building', name: 'PSZOK',     fullName: 'PSZOK',          desc: 'Odpady problemowe i wielkogabarytowe', icon: '🏭' },
-  kaucja: { dot: 'bg-teal-500',   bg: 'bg-teal-500',   hex: '#14b8a6', textColor: 'text-teal-500',   iconType: 'return',   name: 'Kaucja',    fullName: 'Kaucja',         desc: 'Butelki i puszki z kaucją',            icon: '🫙' },
+  kaucja: { dot: 'bg-teal-500',     bg: 'bg-teal-500',     hex: '#14b8a6', textColor: 'text-teal-500',    iconType: 'return',   name: 'Kaucja',  fullName: 'Kaucja',         desc: 'Butelki i puszki z kaucją',  icon: '🫙' },
+  apteka: { dot: 'bg-emerald-500', bg: 'bg-emerald-500', hex: '#10b981', textColor: 'text-emerald-600', iconType: 'pharmacy', name: 'Apteka',  fullName: 'Apteka',         desc: 'Punkt zbiórki leków',        icon: '💊' },
 }
 
-const BIN_ORDER: BinId[] = ['yellow', 'blue', 'green', 'brown', 'gray', 'purple', 'red', 'pszok', 'kaucja']
+const BIN_ORDER: BinId[] = ['yellow', 'blue', 'green', 'brown', 'gray', 'purple', 'red', 'pszok', 'kaucja', 'apteka']
 
 const KATEGORIA_TO_BIN: Record<Exclude<Kategoria, 'niewyrazne' | 'niewaste'>, BinId> = {
   plastik_metal: 'yellow',
@@ -60,6 +61,7 @@ const KATEGORIA_TO_BIN: Record<Exclude<Kategoria, 'niewyrazne' | 'niewaste'>, Bi
   elektroodpady: 'red',
   pszok:         'pszok',
   kaucja:        'kaucja',
+  apteka:        'apteka',
 }
 
 export default function RecyclingAssistant() {
@@ -535,6 +537,8 @@ function ResultCardBinIcon({ binId }: { binId: BinId }) {
         <BuildingIcon className="h-7 w-7 text-white" />
       ) : bin.iconType === 'return' ? (
         <ReturnIcon className="h-7 w-7 text-white" />
+      ) : bin.iconType === 'pharmacy' ? (
+        <PharmacyCrossIcon className="h-7 w-7 text-white" />
       ) : (
         <span className="select-none leading-none text-white" style={{ fontSize: '28px', fontFamily: 'system-ui, sans-serif' }}>
           {'♻︎'}
@@ -552,7 +556,16 @@ function LegendIcon({ binId, className }: { binId: BinId; className?: string }) 
   const cls = `${className ?? ''} ${bin.textColor}`
   if (bin.iconType === 'building') return <BuildingIcon className={cls} />
   if (bin.iconType === 'return') return <ReturnIcon className={cls} />
+  if (bin.iconType === 'pharmacy') return <PharmacyCrossIcon className={cls} />
   return <TrashBinIcon className={cls} />
+}
+
+function PharmacyCrossIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M9 2h6v5h5v6h-5v5H9v-5H4V7h5z" />
+    </svg>
+  )
 }
 
 function TrashBinIcon({ className }: { className?: string }) {

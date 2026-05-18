@@ -7,7 +7,7 @@ export const maxDuration = 60
 
 const VALID_KATEGORIE = new Set([
   'plastik_metal', 'papier', 'szklo', 'bio', 'zmieszane',
-  'tekstylia', 'elektroodpady', 'pszok', 'kaucja', 'niewyrazne', 'niewaste',
+  'tekstylia', 'elektroodpady', 'pszok', 'kaucja', 'niewyrazne', 'niewaste', 'apteka',
 ])
 
 const REQUIRED_FIELDS = [
