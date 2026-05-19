@@ -12,7 +12,7 @@ export type BinId =
 
 type Kategoria =
   | 'plastik_metal' | 'papier' | 'szklo' | 'bio' | 'zmieszane'
-  | 'tekstylia' | 'elektroodpady' | 'pszok' | 'kaucja' | 'niewyrazne' | 'niewaste' | 'apteka'
+  | 'tekstylia' | 'elektroodpady' | 'pszok' | 'kaucja' | 'niewyrazne' | 'nie_odpad' | 'apteka'
 
 type ApiResult = {
   kategoria: Kategoria
@@ -51,7 +51,7 @@ export const BIN_CONFIG: Record<BinId, BinInfo> = {
 
 const BIN_ORDER: BinId[] = ['yellow', 'blue', 'green', 'brown', 'gray', 'purple', 'red', 'pszok', 'kaucja', 'apteka']
 
-const KATEGORIA_TO_BIN: Record<Exclude<Kategoria, 'niewyrazne' | 'niewaste'>, BinId> = {
+const KATEGORIA_TO_BIN: Record<Exclude<Kategoria, 'niewyrazne' | 'nie_odpad'>, BinId> = {
   plastik_metal: 'yellow',
   papier:        'blue',
   szklo:         'green',
@@ -175,7 +175,7 @@ export default function RecyclingAssistant() {
       setAnalyzeResult(data as ApiResult)
       setAnalyzeState('done')
     } catch {
-      setAnalyzeError('Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.')
+      setAnalyzeError('Nie udało się przeanalizować tego zdjęcia. Spróbuj zrobić zdjęcie ponownie lub wybierz inny przedmiot.')
       setAnalyzeState('error')
     }
   }
@@ -344,11 +344,11 @@ export default function RecyclingAssistant() {
         {analyzeState === 'done' && analyzeResult && (
           analyzeResult.kategoria === 'niewyrazne'
             ? <BlurryPhotoCard />
-            : analyzeResult.kategoria === 'niewaste'
+            : analyzeResult.kategoria === 'nie_odpad'
             ? <NotWasteCard />
             : (
               <ResultCard
-                binId={KATEGORIA_TO_BIN[analyzeResult.kategoria as Exclude<Kategoria, 'niewyrazne' | 'niewaste'>]}
+                binId={KATEGORIA_TO_BIN[analyzeResult.kategoria as Exclude<Kategoria, 'niewyrazne' | 'nie_odpad'>]}
                 nazwaObiektu={analyzeResult.nazwa_przedmiotu}
                 pewnosc={analyzeResult.pewnosc}
                 jakPrzygotowac={analyzeResult.jak_przygotowac}
