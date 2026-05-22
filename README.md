@@ -6,7 +6,7 @@ Take a photo of any item — even contaminated or unusual ones — and find out 
 
 🔗 **Live demo:** [gdzie-wyrzucic.vercel.app](https://gdzie-wyrzucic.vercel.app/)
 
-📝 **Write-up:** [`dev.to` article](TODO)
+📝 **Write-up:** [`dev.to` article](https://dev.to/klaudiagrz/recycling-made-easy-a-polish-recycling-assistant-powered-by-gemma-4-j0a)
 
 ---
 
