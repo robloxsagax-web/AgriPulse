@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 
 type ViewState = 'idle' | 'camera' | 'preview'
 type AnalyzeState = 'idle' | 'loading' | 'done' | 'error'
-type Confidence = 'wysoka' | 'srednia' | 'niska'
+type Confidence = 'high' | 'medium' | 'low'
 
 export type BinId =
   | 'yellow' | 'blue' | 'green' | 'brown' | 'gray'
@@ -37,16 +37,16 @@ interface BinInfo {
 }
 
 export const BIN_CONFIG: Record<BinId, BinInfo> = {
-  yellow: { dot: 'bg-yellow-400', bg: 'bg-yellow-400', hex: '#facc15', textColor: 'text-yellow-500', iconType: 'bin',      name: 'Żółty',     fullName: 'Żółty kosz',     desc: 'Plastik i metal',                      icon: '🧴' },
-  blue:   { dot: 'bg-blue-500',   bg: 'bg-blue-500',   hex: '#3b82f6', textColor: 'text-blue-500',   iconType: 'bin',      name: 'Niebieski', fullName: 'Niebieski kosz', desc: 'Papier i tektura',                     icon: '📰' },
-  green:  { dot: 'bg-green-600',  bg: 'bg-green-600',  hex: '#16a34a', textColor: 'text-green-600',  iconType: 'bin',      name: 'Zielony',   fullName: 'Zielony kosz',   desc: 'Szkło',                                icon: '🍾' },
-  brown:  { dot: 'bg-amber-700',  bg: 'bg-amber-700',  hex: '#b45309', textColor: 'text-amber-700',  iconType: 'bin',      name: 'Brązowy',   fullName: 'Brązowy kosz',   desc: 'Bio i resztki jedzenia',               icon: '🍂' },
-  gray:   { dot: 'bg-gray-400',   bg: 'bg-gray-400',   hex: '#9ca3af', textColor: 'text-gray-500',   iconType: 'bin',      name: 'Szary',     fullName: 'Szary kosz',     desc: 'Odpady zmieszane',                     icon: '🗑️' },
-  purple: { dot: 'bg-purple-500', bg: 'bg-purple-500', hex: '#a855f7', textColor: 'text-purple-500', iconType: 'bin',      name: 'Fioletowy', fullName: 'Fioletowy kosz', desc: 'Tekstylia',                            icon: '👕' },
-  red:    { dot: 'bg-red-500',    bg: 'bg-red-500',    hex: '#ef4444', textColor: 'text-red-500',    iconType: 'bin',      name: 'Czerwony',  fullName: 'Czerwony kosz',  desc: 'Elektroodpady',                        icon: '🔌' },
-  pszok:  { dot: 'bg-orange-500', bg: 'bg-orange-500', hex: '#f97316', textColor: 'text-orange-500', iconType: 'building', name: 'PSZOK',     fullName: 'PSZOK',          desc: 'Odpady problemowe i wielkogabarytowe', icon: '🏭' },
-  kaucja: { dot: 'bg-teal-500',     bg: 'bg-teal-500',     hex: '#14b8a6', textColor: 'text-teal-500',    iconType: 'return',   name: 'Kaucja',  fullName: 'Kaucja',         desc: 'Butelki i puszki z kaucją',  icon: '🫙' },
-  apteka: { dot: 'bg-emerald-500', bg: 'bg-emerald-500', hex: '#10b981', textColor: 'text-emerald-600', iconType: 'pharmacy', name: 'Apteka',  fullName: 'Apteka',         desc: 'Punkt zbiórki leków',        icon: '💊' },
+  yellow: { dot: 'bg-yellow-400', bg: 'bg-yellow-400', hex: '#facc15', textColor: 'text-yellow-500', iconType: 'bin',      name: 'Yellow',    fullName: 'Yellow bin',    desc: 'Plastic and metal',                      icon: '🧴' },
+  blue:   { dot: 'bg-blue-500',   bg: 'bg-blue-500',   hex: '#3b82f6', textColor: 'text-blue-500',   iconType: 'bin',      name: 'Blue',      fullName: 'Blue bin',      desc: 'Paper and cardboard',                     icon: '📰' },
+  green:  { dot: 'bg-green-600',  bg: 'bg-green-600',  hex: '#16a34a', textColor: 'text-green-600',  iconType: 'bin',      name: 'Green',     fullName: 'Green bin',     desc: 'Glass',                                icon: '🍾' },
+  brown:  { dot: 'bg-amber-700',  bg: 'bg-amber-700',  hex: '#b45309', textColor: 'text-amber-700',  iconType: 'bin',      name: 'Brown',     fullName: 'Brown bin',     desc: 'Bio and food scraps',               icon: '🍂' },
+  gray:   { dot: 'bg-gray-400',   bg: 'bg-gray-400',   hex: '#9ca3af', textColor: 'text-gray-500',   iconType: 'bin',      name: 'Grey',      fullName: 'Grey bin',      desc: 'Mixed waste',                     icon: '🗑️' },
+  purple: { dot: 'bg-purple-500', bg: 'bg-purple-500', hex: '#a855f7', textColor: 'text-purple-500', iconType: 'bin',      name: 'Purple',    fullName: 'Purple bin',    desc: 'Textiles',                            icon: '👕' },
+  red:    { dot: 'bg-red-500',    bg: 'bg-red-500',    hex: '#ef4444', textColor: 'text-red-500',    iconType: 'bin',      name: 'Red',       fullName: 'Red bin',       desc: 'E-waste',                        icon: '🔌' },
+  pszok:  { dot: 'bg-orange-500', bg: 'bg-orange-500', hex: '#f97316', textColor: 'text-orange-500', iconType: 'building', name: 'PSZOK',     fullName: 'PSZOK',          desc: 'Problematic and bulky waste', icon: '🏭' },
+  kaucja: { dot: 'bg-teal-500',     bg: 'bg-teal-500',     hex: '#14b8a6', textColor: 'text-teal-500',    iconType: 'return',   name: 'Deposit',   fullName: 'Deposit',      desc: 'Deposit bottles and cans',  icon: '🫙' },
+  apteka: { dot: 'bg-emerald-500', bg: 'bg-emerald-500', hex: '#10b981', textColor: 'text-emerald-600', iconType: 'pharmacy', name: 'Pharmacy', fullName: 'Pharmacy',     desc: 'Medication collection point',        icon: '💊' },
 }
 
 const BIN_ORDER: BinId[] = ['yellow', 'blue', 'green', 'brown', 'gray', 'purple', 'red', 'pszok', 'kaucja', 'apteka']
@@ -116,7 +116,7 @@ export default function RecyclingAssistant() {
       streamRef.current = stream
       setView('camera')
     } catch {
-      setCameraError('Brak dostępu do kamery. Sprawdź uprawnienia w przeglądarce.')
+      setCameraError('No camera access. Check the permissions in your browser.')
     }
   }
 
@@ -167,7 +167,7 @@ export default function RecyclingAssistant() {
       const res = await fetch('/api/classify', { method: 'POST', body: formData })
       const data: unknown = await res.json()
       if (!res.ok) {
-        const msg = (data as { error?: string })?.error ?? 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.'
+        const msg = (data as { error?: string })?.error ?? 'An unexpected error occurred. Please try again.'
         setAnalyzeError(msg)
         setAnalyzeState('error')
         return
@@ -175,7 +175,7 @@ export default function RecyclingAssistant() {
       setAnalyzeResult(data as ApiResult)
       setAnalyzeState('done')
     } catch {
-      setAnalyzeError('Nie udało się przeanalizować tego zdjęcia. Spróbuj zrobić zdjęcie ponownie lub wybierz inny przedmiot.')
+      setAnalyzeError('Could not analyze this photo. Try taking it again or choose a different item.')
       setAnalyzeState('error')
     }
   }
@@ -189,12 +189,12 @@ export default function RecyclingAssistant() {
           </span>
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-stone-800">
-          Gdzie to wyrzucić?
+          Where to throw it?
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-stone-500">
-          Zrób zdjęcie przedmiotu, a powiem Ci,
+          Take a photo of an item and I&apos;ll tell you
           <br />
-          do którego kosza go wrzucić.
+          which bin to put it in.
         </p>
       </header>
 
@@ -206,8 +206,8 @@ export default function RecyclingAssistant() {
               <CameraIcon className="h-8 w-8" />
             </div>
             <div className="text-center">
-              <p className="font-semibold text-stone-700">Zrób zdjęcie przedmiotu</p>
-              <p className="mt-1 text-xs text-stone-400">lub wybierz z galerii zdjęć</p>
+              <p className="font-semibold text-stone-700">Take a photo of an item</p>
+              <p className="mt-1 text-xs text-stone-400">or choose from the gallery</p>
             </div>
             <div className="flex gap-3">
               <button
@@ -215,11 +215,11 @@ export default function RecyclingAssistant() {
                 className="flex items-center gap-2 rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform active:scale-95"
               >
                 <CameraIcon className="h-4 w-4" />
-                Aparat
+                Camera
               </button>
               <label className="relative overflow-hidden flex cursor-pointer items-center gap-2 rounded-full border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-600 transition-transform active:scale-95">
                 <GalleryIcon className="h-4 w-4" />
-                Galeria
+                Gallery
                 <input
                   type="file"
                   accept="image/*"
@@ -231,7 +231,7 @@ export default function RecyclingAssistant() {
             {showCameraFallback && (
               <label className="relative overflow-hidden flex cursor-pointer items-center gap-2 rounded-full bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-transform active:scale-95">
                 <CameraIcon className="h-4 w-4" />
-                Otwórz aparat
+                Open camera
                 <input
                   type="file"
                   accept="image/*"
@@ -248,7 +248,7 @@ export default function RecyclingAssistant() {
         )}
         {view === 'idle' && (
           <p className="text-center text-xs leading-relaxed text-stone-400">
-            Aplikacja przeznaczona wyłącznie do oceny przedmiotów do segregacji odpadów. Zdjęcia nie są przechowywane.
+            This app is only for checking how to sort waste items. Photos are not stored.
           </p>
         )}
 
@@ -266,14 +266,14 @@ export default function RecyclingAssistant() {
                 <button
                   onClick={() => { stopCamera(); setView('idle') }}
                   className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm"
-                  aria-label="Anuluj"
+                  aria-label="Cancel"
                 >
                   <CloseIcon className="h-5 w-5" />
                 </button>
                 <button
                   onClick={capturePhoto}
                   className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-white/20 backdrop-blur-sm transition-transform active:scale-90"
-                  aria-label="Zrób zdjęcie"
+                  aria-label="Take photo"
                 >
                   <div className="h-12 w-12 rounded-full bg-white" />
                 </button>
@@ -288,7 +288,7 @@ export default function RecyclingAssistant() {
             <div className="relative">
               <img
                 src={photo}
-                alt="Zdjęcie przedmiotu"
+                alt="Photo of the item"
                 className="aspect-[4/3] w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -299,7 +299,7 @@ export default function RecyclingAssistant() {
                   onClick={handleReset}
                   className="flex-1 rounded-full bg-green-600 py-2.5 text-sm font-semibold text-white transition-transform active:scale-95"
                 >
-                  Sprawdź inny przedmiot
+                  Check another item
                 </button>
               ) : (
                 <>
@@ -308,7 +308,7 @@ export default function RecyclingAssistant() {
                     disabled={analyzeState === 'loading'}
                     className="flex-1 rounded-full border border-stone-200 py-2.5 text-sm font-medium text-stone-600 transition-colors active:bg-stone-50 disabled:opacity-40"
                   >
-                    Zrób ponownie
+                    Retake
                   </button>
                   <button
                     onClick={handleAnalyze}
@@ -318,12 +318,12 @@ export default function RecyclingAssistant() {
                     {analyzeState === 'loading' ? (
                       <>
                         <SpinnerIcon className="h-4 w-4 animate-spin" />
-                        Analizuję...
+                        Analyzing...
                       </>
                     ) : (
                       <>
                         <SparkleIcon className="h-4 w-4" />
-                        {analyzeState === 'error' ? 'Spróbuj ponownie' : 'Analizuj'}
+                        {analyzeState === 'error' ? 'Try again' : 'Analyze'}
                       </>
                     )}
                   </button>
@@ -361,7 +361,7 @@ export default function RecyclingAssistant() {
 
         <div className="rounded-2xl bg-white p-5 shadow-sm">
           <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-400">
-            Kosze na odpady
+            Waste bins
           </p>
           <div className="space-y-2.5">
             {BIN_ORDER.map((id) => {
@@ -385,9 +385,9 @@ export default function RecyclingAssistant() {
 }
 
 const CONFIDENCE_STYLES: Record<Confidence, { badge: string; label: string }> = {
-  wysoka:  { badge: 'bg-green-100 text-green-700', label: 'Wysoka pewność' },
-  srednia: { badge: 'bg-amber-100 text-amber-700', label: 'Średnia pewność' },
-  niska:   { badge: 'bg-red-100 text-red-600',     label: 'Niska pewność' },
+  high:   { badge: 'bg-green-100 text-green-700', label: 'High confidence' },
+  medium: { badge: 'bg-amber-100 text-amber-700', label: 'Medium confidence' },
+  low:    { badge: 'bg-red-100 text-red-600',     label: 'Low confidence' },
 }
 
 function LoadingCard() {
@@ -395,8 +395,8 @@ function LoadingCard() {
     <div className="flex flex-col items-center gap-4 rounded-2xl bg-white p-8 shadow-sm">
       <div className="h-10 w-10 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
       <div className="text-center">
-        <p className="text-sm font-semibold text-stone-700">Analizuję zdjęcie...</p>
-        <p className="mt-1 text-xs text-stone-400">To może potrwać 15–30 sekund</p>
+        <p className="text-sm font-semibold text-stone-700">Analyzing photo...</p>
+        <p className="mt-1 text-xs text-stone-400">This may take 15–30 seconds</p>
       </div>
     </div>
   )
@@ -406,7 +406,7 @@ function ErrorCard({ message }: { message: string }) {
   return (
     <div className="rounded-2xl bg-white p-5 shadow-sm">
       <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-stone-400">
-        Wynik analizy
+        Analysis result
       </p>
       <div className="rounded-xl bg-red-50 px-4 py-3">
         <p className="text-sm leading-relaxed text-red-700">{message}</p>
@@ -419,21 +419,21 @@ function BlurryPhotoCard() {
   return (
     <div className="space-y-3 rounded-2xl bg-white p-5 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
-        Wynik analizy
+        Analysis result
       </p>
       <div className="flex items-center gap-3">
         <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-full bg-stone-200 shadow-md">
           <CameraIcon className="h-7 w-7 text-stone-400" />
         </div>
         <div>
-          <p className="font-bold text-stone-800">Zdjęcie jest niewyraźne</p>
+          <p className="font-bold text-stone-800">The photo is unclear</p>
           <span className="mt-1 inline-block rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-semibold text-stone-500">
-            Niska pewność
+            Low confidence
           </span>
         </div>
       </div>
       <p className="text-sm leading-relaxed text-stone-600">
-        Spróbuj zrobić zdjęcie z bliska, na prostym tle i przy lepszym świetle.
+        Try taking the photo up close, against a plain background, and in better light.
       </p>
     </div>
   )
@@ -443,21 +443,21 @@ function NotWasteCard() {
   return (
     <div className="space-y-3 rounded-2xl bg-white p-5 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
-        Wynik analizy
+        Analysis result
       </p>
       <div className="flex items-center gap-3">
         <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center gap-1 rounded-full bg-sky-100 shadow-md">
           <HelpCircleIcon className="h-7 w-7 text-sky-500" />
         </div>
         <div>
-          <p className="font-bold text-stone-800">To nie wygląda na odpad</p>
+          <p className="font-bold text-stone-800">This doesn&apos;t look like waste</p>
           <span className="mt-1 inline-block rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-semibold text-sky-600">
-            Nie dotyczy
+            Not applicable
           </span>
         </div>
       </div>
       <p className="text-sm leading-relaxed text-stone-600">
-        Aplikacja pomaga w segregacji odpadów. Spróbuj zrobić zdjęcie przedmiotu, który chcesz wyrzucić.
+        This app helps with waste sorting. Try photographing an item you want to throw away.
       </p>
     </div>
   )
@@ -485,7 +485,7 @@ function ResultCard({
   return (
     <div className="space-y-3 rounded-2xl bg-white p-5 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-wide text-stone-400">
-        Wynik analizy
+        Analysis result
       </p>
 
       <div className="flex items-start gap-3">
@@ -502,12 +502,12 @@ function ResultCard({
       </div>
 
       <p className="text-xs text-stone-400">
-        Zidentyfikowano: <span className="font-medium text-stone-600">{nazwaObiektu}</span>
+        Identified: <span className="font-medium text-stone-600">{nazwaObiektu}</span>
       </p>
 
       {potrzebneDoprecyzowanie && (
         <div className="rounded-xl bg-sky-50 px-4 py-3">
-          <p className="mb-1 text-xs font-semibold text-sky-700">Potrzebne doprecyzowanie</p>
+          <p className="mb-1 text-xs font-semibold text-sky-700">Clarification needed</p>
           <p className="text-xs leading-relaxed text-sky-800">{potrzebneDoprecyzowanie}</p>
         </div>
       )}
@@ -515,13 +515,13 @@ function ResultCard({
       <p className="text-sm leading-relaxed text-stone-600">{jakPrzygotowac}</p>
 
       <div className="rounded-xl bg-green-50 px-4 py-3">
-        <p className="mb-1 text-xs font-semibold text-green-700">Wyjaśnienie</p>
+        <p className="mb-1 text-xs font-semibold text-green-700">Explanation</p>
         <p className="text-xs leading-relaxed text-green-800">{wyjasnienie}</p>
       </div>
 
       {uwagaDodatkowa && (
         <div className="rounded-xl bg-amber-50 px-4 py-3">
-          <p className="mb-1 text-xs font-semibold text-amber-700">Uwaga</p>
+          <p className="mb-1 text-xs font-semibold text-amber-700">Note</p>
           <p className="text-xs leading-relaxed text-amber-800">{uwagaDodatkowa}</p>
         </div>
       )}

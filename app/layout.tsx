@@ -8,8 +8,8 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Gdzie to wyrzucić?",
-  description: "Polski asystent segregacji odpadów. Zrób zdjęcie przedmiotu, a Gemma 4 powie ci, do którego kosza go wyrzucić.",
+  title: "Where to throw it?",
+  description: "A recycling assistant for Poland's waste sorting system. Take a photo of an item and Gemma 4 will tell you which bin to put it in.",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${geist.variable} h-full antialiased`}>
+    <html lang="en" className={`${geist.variable} h-full antialiased`}>
       <body className="min-h-full" suppressHydrationWarning>{children}</body>
     </html>
   );

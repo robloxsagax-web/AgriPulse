@@ -33,12 +33,12 @@ export async function POST(request: Request) {
   try {
     formData = await request.formData()
   } catch {
-    return errorResponse(400, 'Nieprawidłowe żądanie.')
+    return errorResponse(400, 'Invalid request.')
   }
 
   const imageField = formData.get('image')
   if (!imageField || !(imageField instanceof Blob)) {
-    return errorResponse(400, 'Nie przesłano zdjęcia.')
+    return errorResponse(400, 'No photo was uploaded.')
   }
 
   // 2. Validate env vars
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
   const model = process.env.GOOGLE_MODEL
   if (!apiKey || !model) {
     console.error('[classify] GOOGLE_API_KEY or GOOGLE_MODEL is not set')
-    return errorResponse(503, 'Asystent jest chwilowo niedostępny. Spróbuj ponownie za chwilę.')
+    return errorResponse(503, 'The assistant is temporarily unavailable. Please try again in a moment.')
   }
 
   // 3. Resize image to max 1024px on the long edge
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     base64Image = resized.toString('base64')
   } catch (err) {
     console.error('[classify] Image processing failed:', err)
-    return errorResponse(422, 'Nie udało się przetworzyć zdjęcia. Sprawdź format pliku.')
+    return errorResponse(422, 'Could not process the photo. Check the file format.')
   }
 
   // 4. Call Google AI Studio with a timeout
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         },
         contents: [{
           parts: [
-            { text: 'Do którego kosza powinienem to wyrzucić?' },
+            { text: 'Which bin should I put this in?' },
             { inline_data: { mime_type: 'image/jpeg', data: base64Image } },
           ],
         }],
@@ -94,17 +94,17 @@ export async function POST(request: Request) {
     if (!res.ok) {
       const errText = await res.text().catch(() => '')
       console.error('[classify] Google AI returned HTTP', res.status, errText)
-      return errorResponse(503, 'Asystent jest chwilowo niedostępny. Spróbuj ponownie za chwilę.')
+      return errorResponse(503, 'The assistant is temporarily unavailable. Please try again in a moment.')
     }
 
     googleBody = await res.json()
   } catch (err: unknown) {
     if (err instanceof Error && err.name === 'AbortError') {
       console.error('[classify] Google AI request timed out after', TIMEOUT_MS, 'ms')
-      return errorResponse(504, 'Analizowanie zdjęcia trwało zbyt długo. Spróbuj ponownie.')
+      return errorResponse(504, 'Analyzing the photo took too long. Please try again.')
     }
     console.error('[classify] Google AI unreachable:', err)
-    return errorResponse(503, 'Asystent jest chwilowo niedostępny. Spróbuj ponownie za chwilę.')
+    return errorResponse(503, 'The assistant is temporarily unavailable. Please try again in a moment.')
   } finally {
     clearTimeout(timeoutId)
   }
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
 
   if (!answerText) {
     console.error('[classify] No answer parts in Google AI response:', JSON.stringify(googleBody))
-    return errorResponse(422, 'Nie udało się przeanalizować zdjęcia. Spróbuj zrobić wyraźniejsze zdjęcie.')
+    return errorResponse(422, 'Could not analyze the photo. Try taking a clearer picture.')
   }
 
   // 6. Parse the JSON that Gemma produced
@@ -131,21 +131,21 @@ export async function POST(request: Request) {
     result = JSON.parse(answerText)
   } catch (err) {
     console.error('[classify] Failed to parse Gemma JSON:', err, '\nRaw:', answerText)
-    return errorResponse(422, 'Nie udało się przeanalizować zdjęcia. Spróbuj zrobić wyraźniejsze zdjęcie.')
+    return errorResponse(422, 'Could not analyze the photo. Try taking a clearer picture.')
   }
 
   // 7. Validate required fields are present
   for (const field of REQUIRED_FIELDS) {
     if (!(field in result)) {
       console.error('[classify] Missing required field:', field, result)
-      return errorResponse(422, 'Nie udało się przeanalizować zdjęcia. Spróbuj zrobić wyraźniejsze zdjęcie.')
+      return errorResponse(422, 'Could not analyze the photo. Try taking a clearer picture.')
     }
   }
 
   // 8. Validate kategoria is one of the known values
   if (!VALID_KATEGORIE.has(result.kategoria as string)) {
     console.error('[classify] Unknown kategoria value:', result.kategoria)
-    return errorResponse(422, 'Nie udało się przeanalizować zdjęcia. Spróbuj zrobić wyraźniejsze zdjęcie.')
+    return errorResponse(422, 'Could not analyze the photo. Try taking a clearer picture.')
   }
 
   return Response.json(result)
