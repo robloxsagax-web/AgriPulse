@@ -1,5 +1,5 @@
-import RecyclingAssistant from './components/RecyclingAssistant'
+import ReSortAssistant from './components/ReSortAssistant'
 
 export default function Page() {
-  return <RecyclingAssistant />
+  return <ReSortAssistant />
 }

@@ -1,12 +1,10 @@
-# Gdzie to wyrzucić? 🗑️ [ENG: Where to throw it?]
+# ReSort ♻️
 
-**A Polish recycling assistant powered by Gemma 4**
+**Snap a photo. Find the right bin. Recycle correctly.**
 
-Take a photo of any item — even contaminated or unusual ones — and find out which bin it belongs in. Built for the [`dev.to` Gemma 4 Challenge](https://dev.to/challenges/google-gemma-2026-05-06), May 2026.
+**An AI-powered recycling assistant for Poland's waste sorting system, powered by Gemma 4**
 
-🔗 **Live demo:** [gdzie-wyrzucic.vercel.app](https://gdzie-wyrzucic.vercel.app/)
-
-📝 **Write-up:** [`dev.to` article](https://dev.to/klaudiagrz/recycling-made-easy-a-polish-recycling-assistant-powered-by-gemma-4-j0a)
+Take a photo of any item — even contaminated or unusual ones — and ReSort tells you which bin it belongs in.
 
 ---
 
@@ -72,8 +70,8 @@ You need a [Google AI Studio](https://aistudio.google.com) API key (free tier av
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR-USERNAME/recycling-app.git
-cd recycling-app
+git clone https://github.com/robloxsagax-web/ReSort.git
+cd ReSort
 
 # Install dependencies
 npm install
@@ -103,9 +101,9 @@ Future ideas: location-aware gmina-specific rules, integration with PSZOK locati
 
 ## About
 
-Built by Klaudia Grzondziel for the [`dev.to` Gemma 4 Challenge](https://dev.to/challenges/google-gemma-2026-05-06).
+ReSort is based on [`recycling-app`](https://github.com/klaudiagrz/recycling-app), originally built by Klaudia Grzondziel for the [`dev.to` Gemma 4 Challenge](https://dev.to/challenges/google-gemma-2026-05-06) ([write-up](https://dev.to/klaudiagrz/recycling-made-easy-a-polish-recycling-assistant-powered-by-gemma-4-j0a) · [original live demo](https://gdzie-wyrzucic.vercel.app/)).
 
-I'm a technical writer, not a developer — this is my first web app. AI coding assistance via [Claude Code](https://www.anthropic.com/claude-code) helped me bridge the gap from idea to working code. The product design, system prompt engineering, and Polish recycling knowledge are mine; the boilerplate code is mostly AI-assisted.
+The product design, system prompt engineering, and Polish recycling knowledge are hers; the boilerplate code was mostly AI-assisted via [Claude Code](https://www.anthropic.com/claude-code). ReSort rebrands and continues the project under the MIT license.
 
 ## License
 

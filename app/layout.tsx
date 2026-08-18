@@ -8,8 +8,8 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Where to throw it?",
-  description: "A recycling assistant for Poland's waste sorting system. Take a photo of an item and Gemma 4 will tell you which bin to put it in.",
+  title: "ReSort — Snap a photo. Find the right bin. Recycle correctly.",
+  description: "Snap a photo. Find the right bin. Recycle correctly. ReSort is an AI-powered recycling assistant for Poland's waste sorting system — photograph an item and Gemma 4 tells you which bin it belongs in.",
 };
 
 export default function RootLayout({

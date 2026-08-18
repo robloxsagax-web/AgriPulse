@@ -64,7 +64,7 @@ const KATEGORIA_TO_BIN: Record<Exclude<Kategoria, 'niewyrazne' | 'nie_odpad'>, B
   apteka:        'apteka',
 }
 
-export default function RecyclingAssistant() {
+export default function ReSortAssistant() {
   const [view, setView] = useState<ViewState>('idle')
   const [photo, setPhoto] = useState<string | null>(null)
   const [cameraError, setCameraError] = useState<string | null>(null)
@@ -184,17 +184,13 @@ export default function RecyclingAssistant() {
     <main className="flex min-h-screen flex-col items-center bg-stone-50 px-4 pb-16">
       <header className="w-full max-w-md pt-10 pb-6 text-center">
         <div className="mb-3 flex justify-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-600 shadow-md text-white">
-            <ReturnIcon className="h-7 w-7" />
-          </span>
+          <Logo className="h-14 w-14 shadow-md rounded-2xl" />
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-stone-800">
-          Where to throw it?
+          Re<span className="text-green-600">Sort</span>
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-stone-500">
-          Take a photo of an item and I&apos;ll tell you
-          <br />
-          which bin to put it in.
+          Snap a photo. Find the right bin. Recycle correctly.
         </p>
       </header>
 
@@ -558,6 +554,30 @@ function LegendIcon({ binId, className }: { binId: BinId; className?: string }) 
   if (bin.iconType === 'return') return <ReturnIcon className={cls} />
   if (bin.iconType === 'pharmacy') return <PharmacyCrossIcon className={cls} />
   return <TrashBinIcon className={cls} />
+}
+
+function Logo({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 512 512" role="img" aria-label="ReSort logo">
+      <defs>
+        <linearGradient id="resort-logo-bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#22c55e" />
+          <stop offset="1" stopColor="#15803d" />
+        </linearGradient>
+      </defs>
+      <rect width="512" height="512" rx="116" fill="url(#resort-logo-bg)" />
+      <g fill="none" stroke="#ffffff" strokeWidth="34" strokeLinecap="round">
+        <path d="M 143.2 215 A 120 120 0 0 1 368.8 215" />
+        <path d="M 368.8 297 A 120 120 0 0 1 143.2 297" />
+      </g>
+      <g fill="#ffffff" stroke="#ffffff" strokeWidth="10" strokeLinejoin="round">
+        <path d="M 377.7 239.4 L 341.0 214.5 L 389.8 196.7 Z" />
+        <path d="M 134.3 272.6 L 171.0 297.5 L 122.2 315.3 Z" />
+      </g>
+      <path d="M 256 192 C 318 220 324 282 256 320 C 188 282 194 220 256 192 Z" fill="#ffffff" />
+      <path d="M 256 214 Q 246 256 256 298" fill="none" stroke="#15803d" strokeWidth="11" strokeLinecap="round" />
+    </svg>
+  )
 }
 
 function PharmacyCrossIcon({ className }: { className?: string }) {
