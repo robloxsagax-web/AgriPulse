@@ -244,7 +244,7 @@ export default function ReSortAssistant() {
         )}
         {view === 'idle' && (
           <p className="text-center text-xs leading-relaxed text-stone-400">
-            This app is only for checking how to sort waste items. Photos are not stored.
+            Privacy-first design. Images are processed instantly and never stored.
           </p>
         )}
 
