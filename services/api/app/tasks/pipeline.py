@@ -39,9 +39,9 @@ STAC_API_URL = os.environ.get(
 STAC_COLLECTION = "sentinel-2-l2a"
 MAX_CLOUD_COVER = 20
 MINIO_ENDPOINT = os.environ.get("MINIO_ENDPOINT", "minio:9000")
-MINIO_ACCESS_KEY = os.environ.get("MINIO_ACCESS_KEY", "openfarm")
-MINIO_SECRET_KEY = os.environ.get("MINIO_SECRET_KEY", "openfarm_dev_secret")
-MINIO_BUCKET = os.environ.get("MINIO_BUCKET", "openfarm")
+MINIO_ACCESS_KEY = os.environ.get("MINIO_ACCESS_KEY", "agripulse")
+MINIO_SECRET_KEY = os.environ.get("MINIO_SECRET_KEY", "agripulse_dev_secret")
+MINIO_BUCKET = os.environ.get("MINIO_BUCKET", "agripulse")
 MINIO_SECURE = os.environ.get("MINIO_SECURE", "false").lower() == "true"
 
 # GDAL environment for reading remote COGs

@@ -22,7 +22,7 @@ data "oci_core_images" "ubuntu_arm" {
   }
 }
 
-resource "oci_core_instance" "openfarm" {
+resource "oci_core_instance" "agripulse" {
   compartment_id      = local.compartment_id
   availability_domain = local.availability_domain
   display_name        = var.instance_display_name
@@ -40,9 +40,9 @@ resource "oci_core_instance" "openfarm" {
   }
 
   create_vnic_details {
-    subnet_id        = oci_core_subnet.openfarm.id
+    subnet_id        = oci_core_subnet.agripulse.id
     assign_public_ip = true
-    hostname_label   = "openfarm"
+    hostname_label   = "agripulse"
   }
 
   metadata = {
@@ -62,7 +62,7 @@ resource "oci_core_instance" "openfarm" {
   # Changing tfvars or a newer Ubuntu image must not silently plan a
   # destroy/recreate of a VM holding pgdata/miniodata. Post-boot config
   # changes are made on the VM (.env + rebuild); replace deliberately
-  # with: terraform taint oci_core_instance.openfarm
+  # with: terraform taint oci_core_instance.agripulse
   lifecycle {
     ignore_changes = [metadata, source_details]
   }

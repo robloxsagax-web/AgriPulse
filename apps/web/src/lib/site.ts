@@ -5,7 +5,7 @@
  * llms.txt all read from here, so a self-hosted instance describes
  * itself correctly by setting NEXT_PUBLIC_SITE_URL and nothing else.
  *
- * The fallback is localhost on purpose. Defaulting to openfarm.earth
+ * The fallback is localhost on purpose. Defaulting to agripulse.earth
  * would make every unconfigured deployment publish canonicals pointing
  * at our domain, telling search engines their pages are duplicates of
  * ours. Wrong-but-local is a safer failure than wrong-and-someone-else.
@@ -17,12 +17,13 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3
     "",
 );
 
-export const SITE_NAME = "OpenFarm";
-export const REPO_URL = "https://github.com/superzero11/OpenFarm";
+export const SITE_NAME = "AgriPulse";
+export const SITE_TAGLINE = "Real-time planetary monitoring for next-gen farming.";
+export const REPO_URL = "https://github.com/robloxsagax-web/AgriPulse";
 export const DISCORD_URL = "https://discord.gg/KM9qxpEmsU";
 
 /**
- * The entity graph an answer engine needs to tell this OpenFarm apart
+ * The entity graph an answer engine needs to tell this AgriPulse apart
  * from the unrelated projects that share the name. Keep the category
  * phrase ("crop intelligence platform") identical everywhere it appears.
  */

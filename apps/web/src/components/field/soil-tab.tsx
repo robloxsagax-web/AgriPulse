@@ -220,7 +220,7 @@ export default function SoilTab({ fieldId, mapInstance, activeTab }: SoilTabProp
         const map = mapInstance;
         if (!map) return;
 
-        const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: "260px", className: "openfarm-popup" });
+        const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: "260px", className: "agripulse-popup" });
 
         const onClick = (e: maplibregl.MapMouseEvent) => {
             const features = map.queryRenderedFeatures(e.point, { layers: [SAMPLING_LAYER] });
@@ -234,14 +234,14 @@ export default function SoilTab({ fieldId, mapInstance, activeTab }: SoilTabProp
                         ? t("priorityMedium")
                         : t("priorityLow");
             const zoneLabel = (props.zone_type as string).replace(/_/g, " ");
-            const html = `<div class="openfarm-popup-body">
-                <div class="openfarm-popup-title">${t("samplingZone")}</div>
+            const html = `<div class="agripulse-popup-body">
+                <div class="agripulse-popup-title">${t("samplingZone")}</div>
                 <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px">
                     <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${props.color}"></span>
                     <span style="font-weight:500;text-transform:capitalize">${zoneLabel}</span>
                 </div>
-                <div class="openfarm-popup-meta"><b>${t("priority")}:</b> ${priorityLabel} (P${props.priority})</div>
-                <div class="openfarm-popup-note">${props.rationale}</div>
+                <div class="agripulse-popup-meta"><b>${t("priority")}:</b> ${priorityLabel} (P${props.priority})</div>
+                <div class="agripulse-popup-note">${props.rationale}</div>
             </div>`;
             popup.setLngLat(coords).setHTML(html).addTo(map);
         };

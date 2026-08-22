@@ -343,7 +343,7 @@ async def change_member_role(
         if target_user:
             await send_role_changed_email(
                 to_email=target_user.email,
-                org_name=org.name if org else "OpenFarm",
+                org_name=org.name if org else "AgriPulse",
                 new_role=body.role,
                 changed_by_name=ctx.user.name,
             )
@@ -449,7 +449,7 @@ async def create_invite(
         org = await db.get(Org, org_id)
         await send_invite_email(
             to_email=body.email,
-            org_name=org.name if org else "OpenFarm",
+            org_name=org.name if org else "AgriPulse",
             role=body.role,
             invited_by_name=ctx.user.name,
         )
@@ -529,7 +529,7 @@ async def cancel_invite(
         org = await db.get(Org, org_id)
         await send_invite_cancelled_email(
             to_email=invite.email,
-            org_name=org.name if org else "OpenFarm",
+            org_name=org.name if org else "AgriPulse",
         )
     except Exception as exc:
         logger.warning("invite_cancelled_email_failed", error=str(exc))
@@ -583,7 +583,7 @@ async def accept_invite(
         from app.core.email import send_invite_accepted_email
 
         org = await db.get(Org, invite.org_id)
-        org_name = org.name if org else "OpenFarm"
+        org_name = org.name if org else "AgriPulse"
         # Email to the user who accepted
         await send_invite_accepted_email(
             to_email=current_user.email,
@@ -674,7 +674,7 @@ async def transfer_ownership(
         from app.core.email import send_ownership_transferred_email
 
         org = await db.get(Org, org_id)
-        org_name = org.name if org else "OpenFarm"
+        org_name = org.name if org else "AgriPulse"
         new_owner_user = await db.get(User, body.new_owner_user_id)
         # Email to new owner
         if new_owner_user:

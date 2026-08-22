@@ -1,31 +1,31 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────
-# OpenFarm - Automated PostgreSQL Backup Script
+# AgriPulse - Automated PostgreSQL Backup Script
 #
 # Usage:
 #   ./deploy/backup.sh              # Manual run
 #   RETENTION_DAYS=14 ./backup.sh   # Override retention
 #
 # Cron (daily at 02:00 UTC):
-#   0 2 * * * /opt/openfarm/deploy/backup.sh >> /var/log/openfarm-backup.log 2>&1
+#   0 2 * * * /opt/agripulse/deploy/backup.sh >> /var/log/agripulse-backup.log 2>&1
 # ─────────────────────────────────────────────────────────────
 
 set -euo pipefail
 
 # ── Configuration ─────────────────────────────────────────────
-COMPOSE_DIR="${COMPOSE_DIR:-/opt/openfarm}"
-BACKUP_DIR="${BACKUP_DIR:-/opt/openfarm/backups}"
+COMPOSE_DIR="${COMPOSE_DIR:-/opt/agripulse}"
+BACKUP_DIR="${BACKUP_DIR:-/opt/agripulse/backups}"
 RETENTION_DAYS="${RETENTION_DAYS:-7}"
 DB_SERVICE="${DB_SERVICE:-db}"
-DB_USER="${DB_USER:-openfarm}"
-DB_NAME="${DB_NAME:-openfarm}"
+DB_USER="${DB_USER:-agripulse}"
+DB_NAME="${DB_NAME:-agripulse}"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
-BACKUP_FILE="openfarm_${TIMESTAMP}.sql.gz"
+BACKUP_FILE="agripulse_${TIMESTAMP}.sql.gz"
 
 # Optional: upload to MinIO/S3
 UPLOAD_TO_MINIO="${UPLOAD_TO_MINIO:-false}"
 MINIO_ALIAS="${MINIO_ALIAS:-local}"
-MINIO_BUCKET="${MINIO_BUCKET:-openfarm}"
+MINIO_BUCKET="${MINIO_BUCKET:-agripulse}"
 MINIO_BACKUP_PREFIX="${MINIO_BACKUP_PREFIX:-backups}"
 
 # ── Functions ─────────────────────────────────────────────────
@@ -58,12 +58,12 @@ docker compose exec -T "${DB_SERVICE}" \
     > "${BACKUP_DIR}/${BACKUP_FILE%.gz}" 2>/dev/null
 
 # Use custom format (-Fc) which is already compressed, rename accordingly
-BACKUP_FILE="openfarm_${TIMESTAMP}.dump"
-mv "${BACKUP_DIR}/openfarm_${TIMESTAMP}.sql" "${BACKUP_DIR}/${BACKUP_FILE}" 2>/dev/null || true
+BACKUP_FILE="agripulse_${TIMESTAMP}.dump"
+mv "${BACKUP_DIR}/agripulse_${TIMESTAMP}.sql" "${BACKUP_DIR}/${BACKUP_FILE}" 2>/dev/null || true
 
 # Fall back to plain SQL + gzip if custom format fails
 if [ ! -s "${BACKUP_DIR}/${BACKUP_FILE}" ] 2>/dev/null; then
-    BACKUP_FILE="openfarm_${TIMESTAMP}.sql.gz"
+    BACKUP_FILE="agripulse_${TIMESTAMP}.sql.gz"
     docker compose exec -T "${DB_SERVICE}" \
         pg_dump -U "${DB_USER}" "${DB_NAME}" \
         | gzip -9 > "${BACKUP_DIR}/${BACKUP_FILE}"
@@ -88,7 +88,7 @@ fi
 # ── Retention - delete backups older than N days ──────────────
 
 log "Pruning local backups older than ${RETENTION_DAYS} days..."
-PRUNED=$(find "${BACKUP_DIR}" -name "openfarm_*.dump" -o -name "openfarm_*.sql.gz" \
+PRUNED=$(find "${BACKUP_DIR}" -name "agripulse_*.dump" -o -name "agripulse_*.sql.gz" \
     | while read -r f; do
         if [ "$(find "$f" -mtime +"${RETENTION_DAYS}" 2>/dev/null)" ]; then
             rm -f "$f"
@@ -99,6 +99,6 @@ log "Pruned ${PRUNED} old backup(s)"
 
 # ── Summary ───────────────────────────────────────────────────
 
-TOTAL_BACKUPS=$(find "${BACKUP_DIR}" \( -name "openfarm_*.dump" -o -name "openfarm_*.sql.gz" \) | wc -l)
+TOTAL_BACKUPS=$(find "${BACKUP_DIR}" \( -name "agripulse_*.dump" -o -name "agripulse_*.sql.gz" \) | wc -l)
 TOTAL_SIZE=$(du -sh "${BACKUP_DIR}" 2>/dev/null | cut -f1)
 log "Backup complete. ${TOTAL_BACKUPS} backup(s) on disk (${TOTAL_SIZE} total)"

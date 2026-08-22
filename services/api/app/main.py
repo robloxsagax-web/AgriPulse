@@ -1,4 +1,4 @@
-"""OpenFarm API - FastAPI application entry point."""
+"""AgriPulse API - FastAPI application entry point."""
 
 from contextlib import asynccontextmanager
 
@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="OpenFarm API",
+    title="AgriPulse API",
     version="0.1.0",
     docs_url="/docs",
     openapi_url="/openapi.json",

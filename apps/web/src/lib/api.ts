@@ -1,5 +1,5 @@
 /**
- * OpenFarm API client.
+ * AgriPulse API client.
  *
  * Handles JWT token lifecycle (mint / cache / re-mint) and X-Org-Id header injection.
  * All methods return typed responses; throws on HTTP errors.
@@ -31,12 +31,12 @@ async function getToken(): Promise<string> {
 /** Get the currently selected org ID from localStorage. */
 export function getOrgId(): string | null {
     if (typeof window === "undefined") return null;
-    return localStorage.getItem("openfarm_org_id");
+    return localStorage.getItem("agripulse_org_id");
 }
 
 export function setOrgId(orgId: string) {
     if (typeof window !== "undefined") {
-        localStorage.setItem("openfarm_org_id", orgId);
+        localStorage.setItem("agripulse_org_id", orgId);
     }
 }
 
@@ -671,7 +671,7 @@ export interface ShareReport {
 
 // ── Uploads ──────────────────────────────────────────────────────
 
-const MINIO_URL = process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000/openfarm";
+const MINIO_URL = process.env.NEXT_PUBLIC_MINIO_URL || "http://localhost:9000/agripulse";
 
 export const uploadsApi = {
     presign: (filename: string, contentType = "image/jpeg") =>

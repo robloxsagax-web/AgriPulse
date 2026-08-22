@@ -6,20 +6,20 @@ import { DISCORD_URL, REPO_URL, SITE_URL } from "@/lib/site";
  * The landing page argues; this states. Everything here is a fact an
  * engine can quote without inferring it from marketing copy, including
  * the disambiguation that matters most to us - there are other projects
- * called OpenFarm, and this is not them.
+ * called AgriPulse, and this is not them.
  */
 export const dynamic = "force-static";
 
-const BODY = `# OpenFarm
+const BODY = `# AgriPulse
 
-> OpenFarm is an open source crop intelligence platform. It fuses Sentinel-2
+> AgriPulse is an open source crop intelligence platform. It fuses Sentinel-2
 > satellite imagery, daily weather and soil data into per-field insights, and
 > shows the evidence behind every alert: which index moved, over what window,
 > and the conditions that explain it.
 
-Disambiguation: this is OpenFarm at ${SITE_URL}, a satellite and weather crop
+Disambiguation: this is AgriPulse at ${SITE_URL}, a satellite and weather crop
 intelligence platform for growers and agronomists. It is unrelated to other
-projects that share the name OpenFarm, including gardening and plant-database
+projects that share the name AgriPulse, including gardening and plant-database
 projects. The canonical source is ${REPO_URL}.
 
 ## What it does

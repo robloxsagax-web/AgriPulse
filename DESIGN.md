@@ -1,7 +1,7 @@
-# OpenFarm design system
+# AgriPulse design system
 
 The rulebook for every surface in `apps/web`. Read it before writing or changing any UI, whether you are a contributor or a coding agent.
-Source of truth for values: **`openfarm-tokens.css`** (token blocks live in `apps/web/src/app/globals.css`). Visual reference: **`docs/design/OpenFarm Design System.dc.html`** (open in a browser; the reference pages are standalone). The reference pages use inline styles so they render without a build step - never copy inline hex out of them; production code uses Tailwind classes reading the tokens.
+Source of truth for values: **`agripulse-tokens.css`** (token blocks live in `apps/web/src/app/globals.css`). Visual reference: **`docs/design/AgriPulse Design System.dc.html`** (open in a browser; the reference pages are standalone). The reference pages use inline styles so they render without a build step - never copy inline hex out of them; production code uses Tailwind classes reading the tokens.
 
 ---
 
@@ -87,7 +87,7 @@ Rules
 - Never go below 11px. 10px is reserved for uppercase micro pills only.
 
 **One exception: the marketing surface.** `components/landing-page.tsx` and
-`components/marketing/` follow screen 06 of `OpenFarm Screens.dc.html`, which
+`components/marketing/` follow screen 06 of `AgriPulse Screens.dc.html`, which
 uses its own display scale (52 / 32 / 22 / 17px) and half steps (13.5 / 12.5 /
 11.5 / 10.5px). That is deliberate and matches the reference file. Nothing
 behind the login may use those sizes.
@@ -193,7 +193,7 @@ Icons inherit `currentColor`. An icon never carries meaning alone - always paire
 
 ## 9. Adding something new
 
-1. Find the closest existing pattern in `docs/design/OpenFarm Design System.dc.html` and copy it.
+1. Find the closest existing pattern in `docs/design/AgriPulse Design System.dc.html` and copy it.
 2. If it needs a new colour, it needs a new token in the token layer of `globals.css`, in **both** themes, with a comment saying what it means.
 3. If it needs a new size, it doesn't - use the scale.
 4. New component: add it to the design system page in the same PR. A component that isn't in the system doesn't exist.

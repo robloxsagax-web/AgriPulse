@@ -76,7 +76,7 @@ def _mint_service_jwt() -> str:
         "exp": datetime.now(timezone.utc) + timedelta(minutes=5),
     }
     return jwt.encode(
-        payload, settings.openfarm_jwt_secret, algorithm=settings.jwt_algorithm
+        payload, settings.agripulse_jwt_secret, algorithm=settings.jwt_algorithm
     )
 
 

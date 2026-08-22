@@ -13,9 +13,9 @@ WORKDIR /app
 # NEXT_PUBLIC_* vars must be present at build time (inlined by Next.js)
 ARG NEXT_PUBLIC_API_URL=http://localhost:8000/v1
 ARG NEXT_PUBLIC_TITILER_URL=http://localhost:8080
-ARG NEXT_PUBLIC_PROTOMAPS_URL=http://localhost:9000/openfarm/basemap
+ARG NEXT_PUBLIC_PROTOMAPS_URL=http://localhost:9000/agripulse/basemap
 ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
-ARG NEXT_PUBLIC_MINIO_URL=http://localhost:9000/openfarm
+ARG NEXT_PUBLIC_MINIO_URL=http://localhost:9000/agripulse
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_TITILER_URL=$NEXT_PUBLIC_TITILER_URL
 ENV NEXT_PUBLIC_PROTOMAPS_URL=$NEXT_PUBLIC_PROTOMAPS_URL

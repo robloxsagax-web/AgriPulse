@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for OpenFarm
+about: Suggest an idea for AgriPulse
 labels: enhancement
 ---
 

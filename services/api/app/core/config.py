@@ -1,17 +1,17 @@
-"""OpenFarm API - Core configuration."""
+"""AgriPulse API - Core configuration."""
 
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     # Database
-    database_url: str = "postgresql+asyncpg://openfarm:openfarm_dev@db:5432/openfarm"
+    database_url: str = "postgresql+asyncpg://agripulse:agripulse_dev@db:5432/agripulse"
 
     # Redis
     redis_url: str = "redis://redis:6379/0"
 
     # JWT
-    openfarm_jwt_secret: str = "change-me"
+    agripulse_jwt_secret: str = "change-me"
     jwt_algorithm: str = "HS256"
     jwt_ttl_seconds: int = 3600  # 1 hour
 
@@ -19,9 +19,9 @@ class Settings(BaseSettings):
     minio_endpoint: str = "minio:9000"
     # Browser-reachable endpoint for presigned URLs (empty = use minio_endpoint)
     minio_public_endpoint: str = ""
-    minio_access_key: str = "openfarm"
-    minio_secret_key: str = "openfarm_dev_secret"
-    minio_bucket: str = "openfarm"
+    minio_access_key: str = "agripulse"
+    minio_secret_key: str = "agripulse_dev_secret"
+    minio_bucket: str = "agripulse"
     minio_secure: bool = False
 
     # CORS
@@ -61,7 +61,7 @@ class Settings(BaseSettings):
 
     # Email (Resend)
     resend_api_key: str = ""
-    resend_from_email: str = "OpenFarm <noreply@openfarm.app>"
+    resend_from_email: str = "AgriPulse <noreply@agripulse.app>"
     app_url: str = "http://localhost:3000"
 
     class Config:

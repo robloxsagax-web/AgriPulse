@@ -17,5 +17,5 @@ export const logger = pino({
     ...(isProduction
         ? {} // JSON output in production (default)
         : { formatters: { level: (label: string) => ({ level: label }) } }),
-    base: { service: "openfarm-web" },
+    base: { service: "agripulse-web" },
 });

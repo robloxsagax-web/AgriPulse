@@ -1,8 +1,8 @@
-# OpenFarm - Copilot Instructions
+# AgriPulse - Copilot Instructions
 
 ## Architecture Overview
 
-OpenFarm is an open, modular field intelligence platform built on a **3-layer strategic architecture** (see `ARCHITECTURE.md`):
+AgriPulse is an open, modular field intelligence platform built on a **3-layer strategic architecture** (see `ARCHITECTURE.md`):
 
 - **Layer A - Observation Infrastructure** (Data Gravity): satellite imagery, weather, soil profiles, field boundaries, sensors
 - **Layer B - Intelligence Engine** (Moat): anomaly detection, stress signals, risk models, explainability
@@ -20,7 +20,7 @@ OpenFarm is an open, modular field intelligence platform built on a **3-layer st
 ## Auth Flow
 
 1. User signs in via Google OAuth (NextAuth) → `upsertUser()` in `lib/db.ts` creates user + default org directly in Postgres
-2. Client calls `POST /api/auth/token` to mint a short-lived API JWT (HS256, 1hr TTL, shared `OPENFARM_JWT_SECRET`)
+2. Client calls `POST /api/auth/token` to mint a short-lived API JWT (HS256, 1hr TTL, shared `AGRIPULSE_JWT_SECRET`)
 3. `apiFetch()` in `lib/api.ts` auto-manages JWT caching/re-minting and injects `Authorization` + `X-Org-Id` headers
 4. API routes use `get_current_user` (JWT validation) and `get_org_context` (org membership check via `X-Org-Id` header) as FastAPI dependencies
 5. RBAC via `require_roles("owner", "admin", ...)` dependency factory in `middleware/auth.py`
@@ -64,7 +64,7 @@ Applies to docs, comments, UI strings, commit messages, and script output:
 
 ## Design system (UI work)
 
-Read `DESIGN.md` at the repo root before touching any UI. Never write a raw colour, font size, spacing value, or icon size that is not in the token layer of `apps/web/src/app/globals.css`. Severity uses `sev-*`, measured quantities use their permanent `sig-*` colour, charts use `--viz-1..8`. Visual reference: `docs/design/OpenFarm Design System.dc.html`.
+Read `DESIGN.md` at the repo root before touching any UI. Never write a raw colour, font size, spacing value, or icon size that is not in the token layer of `apps/web/src/app/globals.css`. Severity uses `sev-*`, measured quantities use their permanent `sig-*` colour, charts use `--viz-1..8`. Visual reference: `docs/design/AgriPulse Design System.dc.html`.
 
 ## Frontend Patterns
 
@@ -114,7 +114,7 @@ curl http://localhost:3000/api/health # Web
 | Dev port overrides | `docker-compose.dev.yml` |
 | Prod overrides (Caddy, limits) | `docker-compose.prod.yml` |
 | Strategic architecture | `ARCHITECTURE.md` |
-| PRD (full product spec) | `docs/openfarm.md` |
+| PRD (full product spec) | `docs/agripulse.md` |
 
 ## Changelog Guidelines
 

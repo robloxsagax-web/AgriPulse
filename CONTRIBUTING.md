@@ -1,6 +1,6 @@
-# Contributing to OpenFarm
+# Contributing to AgriPulse
 
-Thank you for your interest in contributing to OpenFarm! Whether it's a bug fix, new feature, documentation improvement, or feedback - every contribution matters. This guide covers everything you need to get up and running.
+Thank you for your interest in contributing to AgriPulse! Whether it's a bug fix, new feature, documentation improvement, or feedback - every contribution matters. This guide covers everything you need to get up and running.
 
 ## Table of Contents
 
@@ -33,12 +33,12 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 1. **Fork** the repository on GitHub
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/<your-username>/OpenFarm.git
-   cd OpenFarm
+   git clone https://github.com/<your-username>/AgriPulse.git
+   cd AgriPulse
    ```
 3. **Add upstream** remote:
    ```bash
-   git remote add upstream https://github.com/superzero11/OpenFarm.git
+   git remote add upstream https://github.com/robloxsagax-web/AgriPulse.git
    ```
 4. **Enable pre-commit hooks** (runs lint + type-check before each commit):
    ```bash
@@ -72,7 +72,7 @@ cp .env.example .env
 
 # 2. Generate secrets
 openssl rand -base64 32   # → paste as NEXTAUTH_SECRET
-openssl rand -base64 64   # → paste as OPENFARM_JWT_SECRET
+openssl rand -base64 64   # → paste as AGRIPULSE_JWT_SECRET
 
 # 3. Edit .env - fill in GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 
@@ -128,7 +128,7 @@ uvicorn app.main:app --reload --port 8000
 ## Project Structure
 
 ```
-openfarm/
+agripulse/
 ├── apps/web/                → Next.js 14 frontend
 │   ├── src/
 │   │   ├── app/             → App Router pages & layouts
@@ -268,7 +268,7 @@ Read [DESIGN.md](DESIGN.md) before writing or changing UI. It is the rulebook fo
 - **Charts compose the shared base.** Use the fragments in `components/charts/chart-base.ts` rather than restating grid, axis or tooltip options.
 - **Icons are lucide-react only.** Never emoji, never inline unicode symbols as icons.
 
-Visual reference: `docs/design/OpenFarm Design System.dc.html` and `docs/design/OpenFarm Screens.dc.html`. Open them in a browser. They use inline styles so they render without a build step - read them for layout and hierarchy, never copy the inline hex out of them.
+Visual reference: `docs/design/AgriPulse Design System.dc.html` and `docs/design/AgriPulse Screens.dc.html`. Open them in a browser. They use inline styles so they render without a build step - read them for layout and hierarchy, never copy the inline hex out of them.
 
 ### General
 
@@ -376,7 +376,7 @@ alembic upgrade head
 
 ## Internationalization (i18n)
 
-OpenFarm uses `next-intl` with `en` and `es` locales.
+AgriPulse uses `next-intl` with `en` and `es` locales.
 
 - Translation files: `apps/web/messages/en.json` and `apps/web/messages/es.json`
 - Routes use the `[locale]` segment with `localePrefix: "as-needed"`
@@ -454,4 +454,4 @@ Please see [SECURITY.md](SECURITY.md) for our responsible disclosure policy.
 
 ---
 
-Thank you for contributing to OpenFarm! Every contribution helps bring transparent, affordable crop intelligence to farms everywhere.
+Thank you for contributing to AgriPulse! Every contribution helps bring transparent, affordable crop intelligence to farms everywhere.

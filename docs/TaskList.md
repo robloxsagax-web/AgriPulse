@@ -1,6 +1,6 @@
-# OpenFarm - Sprint Task List
+# AgriPulse - Sprint Task List
 
-> Auto-generated review against [openfarm.md](openfarm.md) PRD (Phase 1 MVP v1).
+> Auto-generated review against [agripulse.md](agripulse.md) PRD (Phase 1 MVP v1).
 > Last updated: 16 February 2026
 
 **Legend:** [x] Done | [~] Partial | [ ] Not Started
@@ -48,7 +48,7 @@
 | # | Task | Status | Notes |
 |---|------|--------|-------|
 | 0.25 | FastAPI app scaffold with `/v1` prefix | [x] | |
-| 0.26 | JWT auth middleware (HS256, `OPENFARM_JWT_SECRET`) | [x] | `get_current_user` dependency |
+| 0.26 | JWT auth middleware (HS256, `AGRIPULSE_JWT_SECRET`) | [x] | `get_current_user` dependency |
 | 0.27 | `X-Org-Id` header validation middleware | [x] | `get_org_context` checks `org_members` |
 | 0.28 | RBAC `require_roles()` dependency factory | [x] | Used on org admin endpoints |
 | 0.29 | CORS configuration (from env vars) | [x] | On both API and TiTiler |
@@ -592,7 +592,7 @@
 | 12.6 | Alembic migration: `detected_boundaries` table | [x] | `0005_add_detected_boundaries.py` - renumbered from 0004 to fix chain conflict; PostGIS geom column, 3 indexes + GIST spatial index |
 | 12.7 | Add `DetectedBoundary` SQLAlchemy model in `tables.py` | [x] | Follows Field/Alert patterns; indexes on org_id, job_id, status |
 | 12.8 | Add `ftw_model_path` to `config.py` settings | [x] | + `ftw_model_cache_dir`, `detection_max_area_km2` |
-| 12.9 | Upload FTW checkpoint to MinIO | [x] | `s3://openfarm/models/ftw/prue_efnetb5_ccby_checkpoint.ckpt` (120 MB, PRUE EfficientNet-B5 CC-BY); ftw-tools==1.4.3, torch==2.6.0 |
+| 12.9 | Upload FTW checkpoint to MinIO | [x] | `s3://agripulse/models/ftw/prue_efnetb5_ccby_checkpoint.ckpt` (120 MB, PRUE EfficientNet-B5 CC-BY); ftw-tools==1.4.3, torch==2.6.0 |
 
 ### Detection Celery Task
 
@@ -1130,7 +1130,7 @@
 | 21.9 | Run migration - `alembic upgrade head` | [x] | Auto-runs on API container startup |
 | 21.10 | Add FK indexes on `soil_layers.profile_id`, `soil_profiles.field_id`, `soil_profiles.org_id` | [x] | Included in migration 0011 |
 
-**Verify:** `docker compose exec db psql -U openfarm -c "\dt soil_*"` shows 3 tables; `\d soil_layers` shows all columns + unique constraint
+**Verify:** `docker compose exec db psql -U agripulse -c "\dt soil_*"` shows 3 tables; `\d soil_layers` shows all columns + unique constraint
 
 #### Pydantic Schemas
 

@@ -2,11 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-# OpenFarm
+# AgriPulse
 
-Open source crop intelligence platform. Fuses satellite (Sentinel-2), weather (Open-Meteo), and soil (SoilGrids/POLARIS) data into per-field insights. BSD-3-Clause. Repo: https://github.com/superzero11/OpenFarm
+Open source crop intelligence platform. Fuses satellite (Sentinel-2), weather (Open-Meteo), and soil (SoilGrids/POLARIS) data into per-field insights. BSD-3-Clause. Repo: https://github.com/robloxsagax-web/AgriPulse
 
-Deeper docs: ARCHITECTURE.md (3-layer strategic architecture), docs/openfarm.md (full PRD), DEPLOYMENT.md, ROADMAP.md. `.github/copilot-instructions.md` mirrors much of this file - keep them in sync when conventions change.
+Deeper docs: ARCHITECTURE.md (3-layer strategic architecture), docs/agripulse.md (full PRD), DEPLOYMENT.md, ROADMAP.md. `.github/copilot-instructions.md` mirrors much of this file - keep them in sync when conventions change.
 
 ## Branch workflow
 
@@ -17,7 +17,7 @@ All development happens on the `dev` branch. `main` only receives merges from `d
 ```
 apps/web/         Next.js 14 (App Router) + NextAuth + Tailwind + shadcn/ui + MapLibre + ECharts
 services/api/     FastAPI + SQLAlchemy 2.0 (async) + Alembic + Celery tasks
-services/tiler/   TiTiler COG tile server with JWT auth (shared OPENFARM_JWT_SECRET)
+services/tiler/   TiTiler COG tile server with JWT auth (shared AGRIPULSE_JWT_SECRET)
 deploy/           VPS setup + backup scripts; terraform/ = OCI IaC (see its README)
 docker-compose.yml            Postgres/PostGIS 16, Redis 7, MinIO, api, worker, tiler, web
 docker-compose.dev.yml        dev overrides
@@ -56,7 +56,7 @@ Migrations are numbered sequentially (0001–0013 so far). Keep that convention.
 
 ### Full stack
 ```bash
-cp .env.example .env   # fill GOOGLE_CLIENT_ID/SECRET, generate NEXTAUTH_SECRET + OPENFARM_JWT_SECRET
+cp .env.example .env   # fill GOOGLE_CLIENT_ID/SECRET, generate NEXTAUTH_SECRET + AGRIPULSE_JWT_SECRET
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 Web :3000 · API :8000 (/docs Swagger) · TiTiler :8080 · MinIO console :9001
@@ -65,7 +65,7 @@ Health checks: `curl :8000/healthz` (API), `curl :3000/api/health` (web).
 ## Architecture essentials
 
 - **Data-flow boundary:** Next.js talks to Postgres directly **only** for user upsert during the NextAuth callback (apps/web/src/lib/db.ts). All other frontend data flows through the FastAPI API via the typed client in apps/web/src/lib/api.ts (SWR for fetching; namespaced helpers like `farmsApi.list()`, `fieldsApi.create()`).
-- **Auth flow:** Google OAuth via NextAuth → session cookie → `POST /api/auth/token` (apps/web/src/app/api/auth/token/route.ts) mints a 1-hour HS256 API JWT → frontend caches it (apps/web/src/lib/api.ts, re-mints with 60s headroom). API, tiler, and web all verify with the same `OPENFARM_JWT_SECRET`.
+- **Auth flow:** Google OAuth via NextAuth → session cookie → `POST /api/auth/token` (apps/web/src/app/api/auth/token/route.ts) mints a 1-hour HS256 API JWT → frontend caches it (apps/web/src/lib/api.ts, re-mints with 60s headroom). API, tiler, and web all verify with the same `AGRIPULSE_JWT_SECRET`.
 - **Org scoping / RBAC:** dependency chain in services/api/app/middleware/auth.py: `get_current_user` (JWT) → `get_org_context` (X-Org-Id header + OrgMember lookup) → `require_roles("owner","admin","member")`. Every org-scoped endpoint must use this chain. Roles: owner | admin | member | viewer (viewer = read-only). Org-scoped tables carry a denormalized `org_id` column for tenant isolation.
 - **API conventions:** all routes under `/v1`; pagination envelope `{items, total, limit, offset}` (`PaginatedResponse[T]` in schemas/common.py); soft delete via `deleted_at` - always filter with `.where(Model.deleted_at.is_(None))`; geometry stored as `MultiPolygon(4326)` with auto-wrap of Polygons (`_geojson_to_multi` in routers/fields.py); audit events on key actions.
 - **Models:** all ORM tables live in services/api/app/models/tables.py, UUID PKs with `server_default=uuid_generate_v4()`. Pydantic schemas in schemas/ use `model_config = {"from_attributes": True}`.
@@ -88,7 +88,7 @@ CHANGELOG.md is rendered in-app at `/changelog` by a minimal parser (`parseChang
 - Python: ruff (lint + format), type hints throughout, async SQLAlchemy in routers, sync sessions only inside Celery tasks (core/database_sync.py).
 - TypeScript: strict; typed API client in apps/web/src/lib/api.ts - add new endpoint wrappers + interfaces there, don't fetch ad hoc.
 - UI primitives from apps/web/src/components/ui/ (shadcn); charts in components/charts/; field tabs in components/field/.
-- **UI work: read DESIGN.md at the repo root first.** It is the design system rulebook (tokens, colour bindings, typography, spacing, icons, component and chart rules). Never write a raw colour, font size, spacing value, or icon size that is not in the token layer of apps/web/src/app/globals.css. Visual reference: docs/design/OpenFarm Design System.dc.html (do not copy inline hex from it).
+- **UI work: read DESIGN.md at the repo root first.** It is the design system rulebook (tokens, colour bindings, typography, spacing, icons, component and chart rules). Never write a raw colour, font size, spacing value, or icon size that is not in the token layer of apps/web/src/app/globals.css. Visual reference: docs/design/AgriPulse Design System.dc.html (do not copy inline hex from it).
 - Structured logging: structlog (Python), pino-style logger in apps/web/src/lib/logger.ts. No print/console.log.
 - Writing style (strict, applies to docs, comments, UI strings, commit messages, script output): no em-dashes (use hyphens, commas, or restructure), no emojis or decorative unicode symbols, no AI-filler phrasing ("seamless", "leverage", "delve", "robust", "empower", and similar). Plain, precise, technical prose.
 - Icons in the UI come exclusively from lucide-react. Never emoji, never inline unicode symbols as icons.
@@ -96,7 +96,7 @@ CHANGELOG.md is rendered in-app at `/changelog` by a minimal parser (`parseChang
 ## Known issues / priority backlog
 
 1. **No tests.** CI runs `echo "No tests yet"`. Highest priority. Start with core/soil_intelligence.py (pure functions, easy wins, correctness matters agronomically), then middleware/auth.py (get_org_context, require_roles). Add pytest to `[dev]` extras and wire into .github/workflows/ci.yml.
-2. **Secret default fallbacks.** `"change-me"` fallback for OPENFARM_JWT_SECRET exists in three places: services/api/app/core/config.py, services/tiler/app.py, apps/web/src/app/api/auth/token/route.ts. All three services agree on the default, so a misconfigured deploy silently works with a known secret. Fail hard at startup when unset outside dev.
+2. **Secret default fallbacks.** `"change-me"` fallback for AGRIPULSE_JWT_SECRET exists in three places: services/api/app/core/config.py, services/tiler/app.py, apps/web/src/app/api/auth/token/route.ts. All three services agree on the default, so a misconfigured deploy silently works with a known secret. Fail hard at startup when unset outside dev.
 3. **Tile proxy SSRF surface.** proxy_share_tile / TiTiler `url=` param ultimately reach GDAL. Add an explicit allowlist check that dataset URLs come only from our MinIO endpoint / raster_layers rows.
 4. **Service JWT scope.** The share-proxy service token has no `aud` claim; it verifies against the main API too (only failing accidentally at `uuid.UUID(sub)`). Add per-service audience claims and check them.
 5. **`/healthz` always returns HTTP 200**, even with `status: "unhealthy"`. Return 503 on errors so orchestrators notice.

@@ -1,8 +1,8 @@
-"""OpenFarm TiTiler - custom TiTiler with JWT authentication.
+"""AgriPulse TiTiler - custom TiTiler with JWT authentication.
 
 Per PRD: TiTiler endpoints require a valid JWT so that only authenticated
 users can fetch NDVI tile imagery. The JWT is the same token minted by
-the FastAPI API service (shared OPENFARM_JWT_SECRET).
+the FastAPI API service (shared AGRIPULSE_JWT_SECRET).
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from titiler.core.errors import DEFAULT_STATUS_CODES, add_exception_handlers
 
 # ── Config ────────────────────────────────────────────────────────────
 
-JWT_SECRET = os.environ.get("OPENFARM_JWT_SECRET", "change-me")
+JWT_SECRET = os.environ.get("AGRIPULSE_JWT_SECRET", "change-me")
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
 CORS_ORIGINS = os.environ.get("TITILER_API_CORS_ORIGINS", "http://localhost:3000")
 
@@ -75,7 +75,7 @@ def AuthenticatedDatasetPath(
 # ── App ───────────────────────────────────────────────────────────────
 
 app = FastAPI(
-    title="OpenFarm TiTiler",
+    title="AgriPulse TiTiler",
     description="COG tile server with JWT authentication",
     version="0.1.0",
 )

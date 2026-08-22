@@ -138,7 +138,7 @@ export default function ShareReportPage() {
                 <div className="mx-auto flex max-w-[45rem] items-center justify-between gap-4 px-4 py-4">
                     <div className="flex items-center gap-2.5">
                         <Leaf className="h-6 w-6 text-primary" />
-                        <span className="text-base font-bold tracking-tight">OpenFarm</span>
+                        <span className="text-base font-bold tracking-tight">AgriPulse</span>
                     </div>
                     {/* A recipient with no account needs to know what they
                         are holding. One badge does it - no disabled

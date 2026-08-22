@@ -47,7 +47,7 @@ const DATA_SOURCES = [
  * The graph answers three questions an engine has to resolve before it
  * will cite us: what this thing is (SoftwareApplication), who publishes
  * it (Organization, with sameAs so the entity resolves to our GitHub and
- * Discord rather than to unrelated projects sharing the name OpenFarm),
+ * Discord rather than to unrelated projects sharing the name AgriPulse),
  * and what it already answers (FAQPage, built from the same strings the
  * visible section renders).
  */

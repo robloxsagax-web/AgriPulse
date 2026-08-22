@@ -212,7 +212,7 @@ export default function ScoutingTab({ fieldId, mapInstance, activeTab }: Scoutin
         const map = mapInstance;
         if (!map) return;
 
-        const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: "260px", className: "openfarm-popup" });
+        const popup = new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: "260px", className: "agripulse-popup" });
 
         const onClick = (e: maplibregl.MapMouseEvent) => {
             if (pickingRef.current) return;
@@ -234,13 +234,13 @@ export default function ScoutingTab({ fieldId, mapInstance, activeTab }: Scoutin
                 if (obs && obs.geom_point) {
                     const coords = obs.geom_point.coordinates as [number, number];
                     const date = new Date(obs.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-                    const tagsHtml = obs.tags?.length ? obs.tags.map((tg) => `<span class="openfarm-popup-tag">${tg}</span>`).join("") : "";
-                    const noteHtml = obs.note ? `<div class="openfarm-popup-note">${obs.note.length > 100 ? obs.note.slice(0, 100) + "\u2026" : obs.note}</div>` : "";
-                    const html = `<div class="openfarm-popup-body">
-                        <div class="openfarm-popup-title">${obs.title}</div>
-                        <div class="openfarm-popup-meta">${date}</div>
+                    const tagsHtml = obs.tags?.length ? obs.tags.map((tg) => `<span class="agripulse-popup-tag">${tg}</span>`).join("") : "";
+                    const noteHtml = obs.note ? `<div class="agripulse-popup-note">${obs.note.length > 100 ? obs.note.slice(0, 100) + "\u2026" : obs.note}</div>` : "";
+                    const html = `<div class="agripulse-popup-body">
+                        <div class="agripulse-popup-title">${obs.title}</div>
+                        <div class="agripulse-popup-meta">${date}</div>
                         ${noteHtml}
-                        ${tagsHtml ? `<div class="openfarm-popup-tags">${tagsHtml}</div>` : ""}
+                        ${tagsHtml ? `<div class="agripulse-popup-tags">${tagsHtml}</div>` : ""}
                     </div>`;
                     popup.setLngLat(coords).setHTML(html).addTo(map);
                 }

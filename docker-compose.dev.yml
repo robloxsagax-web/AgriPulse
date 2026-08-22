@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# OpenFarm - Development Docker Compose
+# AgriPulse - Development Docker Compose
 #
 # Usage:
 #   docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
@@ -34,7 +34,7 @@ services:
 
   ml-processor:
     environment:
-      DATABASE_URL_SYNC: ${DATABASE_URL_SYNC:-postgresql://openfarm:openfarm_dev@db:5432/openfarm}
+      DATABASE_URL_SYNC: ${DATABASE_URL_SYNC:-postgresql://agripulse:agripulse_dev@db:5432/agripulse}
 
   web:
     ports:

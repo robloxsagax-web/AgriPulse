@@ -192,18 +192,24 @@ export async function renderOgCard(locale: string) {
                         <svg
                             width="42"
                             height="42"
-                            viewBox="0 0 24 24"
+                            viewBox="0 0 512 512"
                             fill="none"
                             stroke={PRIMARY}
-                            strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         >
-                            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-                            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                            <g stroke={PRIMARY} strokeWidth="30" fill="none">
+                                <circle cx="256" cy="256" r="138" />
+                                <ellipse cx="256" cy="256" rx="60" ry="138" />
+                                <ellipse cx="256" cy="256" rx="196" ry="80" transform="rotate(-24 256 256)" />
+                            </g>
+                            <path d="M112 256 L162 256 L189 208 L219 304 L246 256 L395 256" strokeWidth="46" />
+                            <g transform="translate(348, 80) scale(2.2) rotate(30)">
+                                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" fill={PRIMARY} stroke="none" />
+                            </g>
                         </svg>
                         <div style={{ display: "flex", fontSize: 38, fontWeight: 700, color: FOREGROUND }}>
-                            OpenFarm
+                            AgriPulse
                         </div>
                     </div>
 
@@ -234,7 +240,7 @@ export async function renderOgCard(locale: string) {
                             color: MUTED,
                         }}
                     >
-                        <div style={{ display: "flex", color: PRIMARY }}>openfarm.earth</div>
+                        <div style={{ display: "flex", color: PRIMARY }}>agripulse.earth</div>
                         <div style={{ display: "flex" }}>BSD-3-Clause</div>
                         <div style={{ display: "flex" }}>Self-hostable</div>
                     </div>

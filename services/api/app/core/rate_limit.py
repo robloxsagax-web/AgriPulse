@@ -19,7 +19,7 @@ def _key_func(request: Request) -> str:
             token = auth.removeprefix("Bearer ").strip()
             payload = _jwt.decode(
                 token,
-                settings.openfarm_jwt_secret,
+                settings.agripulse_jwt_secret,
                 algorithms=[settings.jwt_algorithm],
             )
             sub = payload.get("sub")

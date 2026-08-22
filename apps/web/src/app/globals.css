@@ -1,5 +1,5 @@
 /* ============================================================================
-   OpenFarm Design System — token layer
+   AgriPulse Design System — token layer
    Drop-in replacement for apps/web/src/app/globals.css (token blocks only).
    Architecture is unchanged: HSL triplets consumed as hsl(var(--x)) by Tailwind.
    Every existing shadcn token keeps its name, so nothing breaks on migration.
@@ -320,7 +320,7 @@
 
 /* ── Map Popup (shadcn-style) ────────────────────────────── */
 
-.openfarm-popup .maplibregl-popup-content {
+.agripulse-popup .maplibregl-popup-content {
     border-radius: 0.5rem;
     border: 1px solid hsl(var(--border));
     background: hsl(var(--popover));
@@ -330,7 +330,7 @@
     overflow: hidden;
 }
 
-.openfarm-popup .maplibregl-popup-close-button {
+.agripulse-popup .maplibregl-popup-close-button {
     font-size: 16px;
     padding: 2px 6px;
     color: hsl(var(--muted-foreground));
@@ -339,39 +339,39 @@
     z-index: 1;
 }
 
-.openfarm-popup .maplibregl-popup-close-button:hover {
+.agripulse-popup .maplibregl-popup-close-button:hover {
     color: hsl(var(--foreground));
     background: transparent;
 }
 
-.openfarm-popup .maplibregl-popup-tip {
+.agripulse-popup .maplibregl-popup-tip {
     border-top-color: hsl(var(--popover));
 }
 
-.openfarm-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+.agripulse-popup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
     border-top-color: hsl(var(--popover));
 }
 
-.openfarm-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip {
+.agripulse-popup.maplibregl-popup-anchor-top .maplibregl-popup-tip {
     border-bottom-color: hsl(var(--popover));
 }
 
-.openfarm-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+.agripulse-popup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
     border-right-color: hsl(var(--popover));
 }
 
-.openfarm-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+.agripulse-popup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
     border-left-color: hsl(var(--popover));
 }
 
 /* Popup content classes */
-.openfarm-popup-body {
+.agripulse-popup-body {
     padding: 0.75rem;
     font-size: 12px;
     line-height: 1.4;
 }
 
-.openfarm-popup-title {
+.agripulse-popup-title {
     font-weight: 600;
     font-size: 13px;
     margin-bottom: 4px;
@@ -381,25 +381,25 @@
     overflow-wrap: break-word;
 }
 
-.openfarm-popup-meta {
+.agripulse-popup-meta {
     color: hsl(var(--muted-foreground));
     margin-bottom: 3px;
     font-size: 11px;
 }
 
-.openfarm-popup-note {
+.agripulse-popup-note {
     color: hsl(var(--muted-foreground));
     margin-bottom: 2px;
 }
 
-.openfarm-popup-tags {
+.agripulse-popup-tags {
     margin-top: 4px;
     display: flex;
     flex-wrap: wrap;
     gap: 2px;
 }
 
-.openfarm-popup-tag {
+.agripulse-popup-tag {
     display: inline-block;
     background: hsl(var(--muted));
     color: hsl(var(--muted-foreground));

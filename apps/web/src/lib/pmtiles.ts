@@ -181,7 +181,7 @@ export async function tryUpgradeToPMTiles(map: maplibregl.Map): Promise<void> {
     }
 
     if (!pmtilesAvailable) {
-        console.warn("[OpenFarm] PMTiles basemap not found at", PMTILES_BASEMAP_URL, "- using OSM tiles");
+        console.warn("[AgriPulse] PMTiles basemap not found at", PMTILES_BASEMAP_URL, "- using OSM tiles");
         return;
     }
 

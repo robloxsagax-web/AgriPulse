@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# OpenFarm - Server Setup Script
+# AgriPulse - Server Setup Script
 #
-# Provisions a fresh Ubuntu 22.04+ server (AMD64 or ARM64) for OpenFarm.
+# Provisions a fresh Ubuntu 22.04+ server (AMD64 or ARM64) for AgriPulse.
 # Run as root or with sudo on the target server.
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/superzero11/OpenFarm/main/deploy/setup.sh | bash
+#   curl -sSL https://raw.githubusercontent.com/robloxsagax-web/AgriPulse/main/deploy/setup.sh | bash
 #   # or
 #   sudo bash deploy/setup.sh
 # ─────────────────────────────────────────────────────────────────────────────
 
 set -euo pipefail
 
-REPO_URL="https://github.com/superzero11/OpenFarm.git"
+REPO_URL="https://github.com/robloxsagax-web/AgriPulse.git"
 REPO_BRANCH="${REPO_BRANCH:-main}"
-INSTALL_DIR="/opt/openfarm"
+INSTALL_DIR="/opt/agripulse"
 
 echo "──────────────────────────────────────────────────────────"
-echo " OpenFarm - Server Setup"
+echo " AgriPulse - Server Setup"
 echo "──────────────────────────────────────────────────────────"
 
 # ── 0. Wait for apt locks ────────────────────────────────────────────
@@ -112,10 +112,10 @@ systemctl start fail2ban
 
 # ── 7. Clone repository ─────────────────────────────────────────────
 if [ ! -d "$INSTALL_DIR" ]; then
-    echo "▸ Cloning OpenFarm ($REPO_BRANCH) to $INSTALL_DIR..."
+    echo "▸ Cloning AgriPulse ($REPO_BRANCH) to $INSTALL_DIR..."
     git clone --branch "$REPO_BRANCH" "$REPO_URL" "$INSTALL_DIR"
 else
-    echo "▸ OpenFarm already cloned, pulling latest..."
+    echo "▸ AgriPulse already cloned, pulling latest..."
     cd "$INSTALL_DIR" && git pull origin "$REPO_BRANCH"
 fi
 
@@ -134,12 +134,12 @@ if [ ! -f .env ]; then
     MINIO_PASSWORD=$(openssl rand -base64 24 | tr -d '/+=\n' | head -c 24)
 
     # Apply generated secrets
-    sed -i "s|POSTGRES_PASSWORD=openfarm_dev|POSTGRES_PASSWORD=$POSTGRES_PASSWORD|" .env
-    sed -i "s|openfarm:openfarm_dev@|openfarm:$POSTGRES_PASSWORD@|g" .env
-    sed -i "s|MINIO_ROOT_PASSWORD=openfarm_dev_secret|MINIO_ROOT_PASSWORD=$MINIO_PASSWORD|" .env
-    sed -i "s|MINIO_SECRET_KEY=openfarm_dev_secret|MINIO_SECRET_KEY=$MINIO_PASSWORD|" .env
+    sed -i "s|POSTGRES_PASSWORD=agripulse_dev|POSTGRES_PASSWORD=$POSTGRES_PASSWORD|" .env
+    sed -i "s|agripulse:agripulse_dev@|agripulse:$POSTGRES_PASSWORD@|g" .env
+    sed -i "s|MINIO_ROOT_PASSWORD=agripulse_dev_secret|MINIO_ROOT_PASSWORD=$MINIO_PASSWORD|" .env
+    sed -i "s|MINIO_SECRET_KEY=agripulse_dev_secret|MINIO_SECRET_KEY=$MINIO_PASSWORD|" .env
     sed -i "s|NEXTAUTH_SECRET=change-me-to-a-random-32-char-string|NEXTAUTH_SECRET=$NEXTAUTH_SECRET|" .env
-    sed -i "s|OPENFARM_JWT_SECRET=change-me-to-a-random-64-char-string|OPENFARM_JWT_SECRET=$JWT_SECRET|" .env
+    sed -i "s|AGRIPULSE_JWT_SECRET=change-me-to-a-random-64-char-string|AGRIPULSE_JWT_SECRET=$JWT_SECRET|" .env
 
     echo ""
     echo "  ╔══════════════════════════════════════════════════════╗"

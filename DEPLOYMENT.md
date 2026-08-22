@@ -1,6 +1,6 @@
 # Deployment Guide
 
-Deploy OpenFarm on a single VPS using Docker Compose + Caddy (auto-SSL).
+Deploy AgriPulse on a single VPS using Docker Compose + Caddy (auto-SSL).
 
 This guide uses **Oracle Cloud Free Tier** (always-free ARM VM with 12 GB RAM), but the steps work on any Ubuntu 22.04+ server.
 
@@ -19,7 +19,7 @@ Ubuntu 22.04+ server.
 
 ## Prerequisites
 
-- A domain name (e.g., `openfarm.example.com`) - free from [Freenom](https://freenom.com) or your registrar
+- A domain name (e.g., `agripulse.example.com`) - free from [Freenom](https://freenom.com) or your registrar
 - Google OAuth credentials - [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 - SSH client on your local machine
 
@@ -59,7 +59,7 @@ SSH into your new VM and run the setup script:
 ssh ubuntu@<your-vm-ip>
 
 # Download and run setup script
-curl -sSL https://raw.githubusercontent.com/superzero11/OpenFarm/main/deploy/setup.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/robloxsagax-web/AgriPulse/main/deploy/setup.sh | sudo bash
 ```
 
 This installs Docker, configures the firewall, creates swap, clones the repo, and generates secure random passwords.
@@ -69,7 +69,7 @@ This installs Docker, configures the firewall, creates swap, clones the repo, an
 ## Step 3: Configure Environment
 
 ```bash
-cd /opt/openfarm
+cd /opt/agripulse
 sudo nano .env
 ```
 
@@ -77,20 +77,20 @@ Update these values (the setup script already generated secure random secrets fo
 
 ```bash
 # Your domain
-DOMAIN=openfarm.example.com
-NEXTAUTH_URL=https://openfarm.example.com
-NEXT_PUBLIC_API_URL=https://openfarm.example.com/v1
-NEXT_PUBLIC_TITILER_URL=https://openfarm.example.com/tiles
-NEXT_PUBLIC_PROTOMAPS_URL=https://openfarm.example.com/storage/openfarm/basemap
-TITILER_PUBLIC_URL=https://openfarm.example.com/tiles
-CORS_ORIGINS=https://openfarm.example.com
+DOMAIN=agripulse.example.com
+NEXTAUTH_URL=https://agripulse.example.com
+NEXT_PUBLIC_API_URL=https://agripulse.example.com/v1
+NEXT_PUBLIC_TITILER_URL=https://agripulse.example.com/tiles
+NEXT_PUBLIC_PROTOMAPS_URL=https://agripulse.example.com/storage/agripulse/basemap
+TITILER_PUBLIC_URL=https://agripulse.example.com/tiles
+CORS_ORIGINS=https://agripulse.example.com
 
 # Google OAuth (from Google Cloud Console)
 GOOGLE_CLIENT_ID=your-actual-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-actual-client-secret
 ```
 
-> **Important**: In Google Cloud Console, add `https://openfarm.example.com/api/auth/callback/google` as an authorized redirect URI.
+> **Important**: In Google Cloud Console, add `https://agripulse.example.com/api/auth/callback/google` as an authorized redirect URI.
 
 ---
 
@@ -100,12 +100,12 @@ At your domain registrar, create an **A record**:
 
 | Type | Name | Value | TTL |
 |------|------|-------|-----|
-| A | `openfarm` (or `@`) | `<your-vm-ip>` | 300 |
+| A | `agripulse` (or `@`) | `<your-vm-ip>` | 300 |
 
 Wait a few minutes for DNS propagation:
 
 ```bash
-dig openfarm.example.com +short
+dig agripulse.example.com +short
 # Should return your VM's IP
 ```
 
@@ -114,7 +114,7 @@ dig openfarm.example.com +short
 ## Step 5: Deploy
 
 ```bash
-cd /opt/openfarm
+cd /opt/agripulse
 
 # Build and start all services
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
@@ -133,7 +133,7 @@ sudo docker compose ps
 # Check health endpoints
 curl -s http://localhost:8000/healthz    # API
 curl -s http://localhost:3000/api/health # Web (internal)
-curl -s https://openfarm.example.com    # Public (through Caddy)
+curl -s https://agripulse.example.com    # Public (through Caddy)
 ```
 
 Caddy automatically provisions a Let's Encrypt SSL certificate on first HTTPS request. This may take 30–60 seconds.
@@ -169,7 +169,7 @@ Internal network (not exposed):
 ### View Logs
 
 ```bash
-cd /opt/openfarm
+cd /opt/agripulse
 
 # All services
 sudo docker compose logs -f --tail 100
@@ -183,23 +183,23 @@ sudo docker compose logs -f web
 ### Update to Latest Version
 
 ```bash
-cd /opt/openfarm
+cd /opt/agripulse
 git pull origin main
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
 ### Database Backup
 
-OpenFarm includes an automated backup script at `deploy/backup.sh`.
+AgriPulse includes an automated backup script at `deploy/backup.sh`.
 
 **Manual backup:**
 
 ```bash
 # Quick one-liner
-sudo docker compose exec db pg_dump -U openfarm openfarm | gzip > backup_$(date +%Y%m%d).sql.gz
+sudo docker compose exec db pg_dump -U agripulse agripulse | gzip > backup_$(date +%Y%m%d).sql.gz
 
 # Using the backup script (recommended)
-sudo /opt/openfarm/deploy/backup.sh
+sudo /opt/agripulse/deploy/backup.sh
 ```
 
 **Automated daily backups (cron):**
@@ -209,27 +209,27 @@ sudo /opt/openfarm/deploy/backup.sh
 sudo crontab -e
 
 # Daily at 02:00 UTC, 7-day retention (default)
-0 2 * * * /opt/openfarm/deploy/backup.sh >> /var/log/openfarm-backup.log 2>&1
+0 2 * * * /opt/agripulse/deploy/backup.sh >> /var/log/agripulse-backup.log 2>&1
 ```
 
 **Configuration (environment variables):**
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `BACKUP_DIR` | `/opt/openfarm/backups` | Local backup directory |
+| `BACKUP_DIR` | `/opt/agripulse/backups` | Local backup directory |
 | `RETENTION_DAYS` | `7` | Days to keep local backups |
 | `UPLOAD_TO_MINIO` | `false` | Upload backups to MinIO/S3 |
 | `MINIO_ALIAS` | `local` | mc alias for MinIO |
-| `MINIO_BUCKET` | `openfarm` | Target bucket |
+| `MINIO_BUCKET` | `agripulse` | Target bucket |
 
 **Restore from backup:**
 
 ```bash
 # From custom format (.dump) - recommended
-sudo docker compose exec -T db pg_restore -U openfarm -d openfarm --clean < backups/openfarm_20260215_020000.dump
+sudo docker compose exec -T db pg_restore -U agripulse -d agripulse --clean < backups/agripulse_20260215_020000.dump
 
 # From SQL format (.sql.gz)
-gunzip -c backups/openfarm_20260215.sql.gz | sudo docker compose exec -T db psql -U openfarm openfarm
+gunzip -c backups/agripulse_20260215.sql.gz | sudo docker compose exec -T db psql -U agripulse agripulse
 ```
 
 ### MinIO Bucket Versioning
@@ -241,17 +241,17 @@ Enable versioning to protect against accidental object deletion/overwrite (COG r
 curl -sSL https://dl.min.io/client/mc/release/linux-arm64/mc -o /usr/local/bin/mc && chmod +x /usr/local/bin/mc
 
 # Configure mc alias
-mc alias set local http://localhost:9000 openfarm openfarm_dev_secret
+mc alias set local http://localhost:9000 agripulse agripulse_dev_secret
 
-# Enable versioning on the openfarm bucket
-mc version enable local/openfarm
+# Enable versioning on the agripulse bucket
+mc version enable local/agripulse
 
 # Verify
-mc version info local/openfarm
-# Expected: local/openfarm versioning is enabled
+mc version info local/agripulse
+# Expected: local/agripulse versioning is enabled
 
 # Optional: set lifecycle rule to expire old versions after 30 days
-mc ilm rule add local/openfarm --noncurrent-expire-days 30
+mc ilm rule add local/agripulse --noncurrent-expire-days 30
 ```
 
 **What versioning protects:**
@@ -266,8 +266,8 @@ For production deployments requiring point-in-time recovery (PITR), enable Postg
 **1. Create archive directory:**
 
 ```bash
-sudo mkdir -p /opt/openfarm/wal-archive
-sudo chown 999:999 /opt/openfarm/wal-archive  # postgres container UID
+sudo mkdir -p /opt/agripulse/wal-archive
+sudo chown 999:999 /opt/agripulse/wal-archive  # postgres container UID
 ```
 
 **2. Add PostgreSQL config overrides** - create `deploy/postgresql.conf`:
@@ -286,7 +286,7 @@ archive_timeout = 300
 db:
   volumes:
     - ./deploy/postgresql.conf:/etc/postgresql/conf.d/wal.conf:ro
-    - /opt/openfarm/wal-archive:/var/lib/postgresql/wal-archive
+    - /opt/agripulse/wal-archive:/var/lib/postgresql/wal-archive
   command: >
     postgres
     -c config_file=/etc/postgresql/postgresql.conf
@@ -300,7 +300,7 @@ db:
 sudo docker compose down
 
 # Create base backup
-sudo docker compose exec db pg_basebackup -U openfarm -D /tmp/basebackup -Ft -z
+sudo docker compose exec db pg_basebackup -U agripulse -D /tmp/basebackup -Ft -z
 
 # To restore to a specific time:
 # 1. Replace the data directory with the base backup
@@ -317,11 +317,11 @@ sudo docker compose up -d
 
 ```bash
 # Check archive size
-du -sh /opt/openfarm/wal-archive/
+du -sh /opt/agripulse/wal-archive/
 
 # Prune WAL files older than the oldest base backup (manual)
 # Keep at minimum 7 days of WAL for PITR window
-find /opt/openfarm/wal-archive/ -name "*.gz" -mtime +7 -delete
+find /opt/agripulse/wal-archive/ -name "*.gz" -mtime +7 -delete
 ```
 
 ### Restart a Service
@@ -334,7 +334,7 @@ sudo docker compose restart processor
 ### Full Restart
 
 ```bash
-cd /opt/openfarm
+cd /opt/agripulse
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml down
 sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```

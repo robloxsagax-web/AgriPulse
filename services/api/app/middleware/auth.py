@@ -46,7 +46,7 @@ async def get_current_user(
     token = authorization.removeprefix("Bearer ").strip()
     try:
         payload = jwt.decode(
-            token, settings.openfarm_jwt_secret, algorithms=[settings.jwt_algorithm]
+            token, settings.agripulse_jwt_secret, algorithms=[settings.jwt_algorithm]
         )
     except JWTError:
         raise HTTPException(

@@ -1,34 +1,34 @@
-resource "oci_core_vcn" "openfarm" {
+resource "oci_core_vcn" "agripulse" {
   compartment_id = local.compartment_id
-  display_name   = "openfarm-vcn"
+  display_name   = "agripulse-vcn"
   cidr_blocks    = [var.vcn_cidr]
-  dns_label      = "openfarm"
+  dns_label      = "agripulse"
 }
 
-resource "oci_core_internet_gateway" "openfarm" {
+resource "oci_core_internet_gateway" "agripulse" {
   compartment_id = local.compartment_id
-  vcn_id         = oci_core_vcn.openfarm.id
-  display_name   = "openfarm-igw"
+  vcn_id         = oci_core_vcn.agripulse.id
+  display_name   = "agripulse-igw"
 }
 
-resource "oci_core_route_table" "openfarm" {
+resource "oci_core_route_table" "agripulse" {
   compartment_id = local.compartment_id
-  vcn_id         = oci_core_vcn.openfarm.id
-  display_name   = "openfarm-rt"
+  vcn_id         = oci_core_vcn.agripulse.id
+  display_name   = "agripulse-rt"
 
   route_rules {
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_internet_gateway.openfarm.id
+    network_entity_id = oci_core_internet_gateway.agripulse.id
   }
 }
 
 # One explicit security list; the subnet does NOT carry the VCN default list,
 # so these rules are the complete ingress surface.
-resource "oci_core_security_list" "openfarm" {
+resource "oci_core_security_list" "agripulse" {
   compartment_id = local.compartment_id
-  vcn_id         = oci_core_vcn.openfarm.id
-  display_name   = "openfarm-sl"
+  vcn_id         = oci_core_vcn.agripulse.id
+  display_name   = "agripulse-sl"
 
   ingress_security_rules {
     description = "SSH"
@@ -86,13 +86,13 @@ resource "oci_core_security_list" "openfarm" {
   }
 }
 
-resource "oci_core_subnet" "openfarm" {
+resource "oci_core_subnet" "agripulse" {
   compartment_id             = local.compartment_id
-  vcn_id                     = oci_core_vcn.openfarm.id
-  display_name               = "openfarm-public"
+  vcn_id                     = oci_core_vcn.agripulse.id
+  display_name               = "agripulse-public"
   cidr_block                 = var.subnet_cidr
   dns_label                  = "public"
-  route_table_id             = oci_core_route_table.openfarm.id
-  security_list_ids          = [oci_core_security_list.openfarm.id]
+  route_table_id             = oci_core_route_table.agripulse.id
+  security_list_ids          = [oci_core_security_list.agripulse.id]
   prohibit_public_ip_on_vnic = false
 }

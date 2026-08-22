@@ -1,5 +1,5 @@
 /**
- * Official brand marks of the projects OpenFarm is built on, used to
+ * Official brand marks of the projects AgriPulse is built on, used to
  * credit them. Path data is the projects' own logo geometry, taken from
  * the CC0 Simple Icons set (simpleicons.org) and vendored here so the
  * page loads no third-party assets at runtime.

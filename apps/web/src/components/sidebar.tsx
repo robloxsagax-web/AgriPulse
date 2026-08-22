@@ -18,12 +18,12 @@ import {
     PanelLeftOpen,
     Menu,
     X,
-    Leaf,
     Plus,
     Loader2,
     ScrollText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AgriPulseLogo } from "@/components/ui/logo";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -169,9 +169,9 @@ export function Sidebar() {
                     )}>
                         {expanded && (
                             <div className="flex items-center gap-2">
-                                <Leaf className="h-7 w-7 shrink-0 text-primary" />
+                                <AgriPulseLogo className="h-7 w-7 text-primary" />
                                 <span className="text-lg font-bold tracking-tight whitespace-nowrap">
-                                    OpenFarm
+                                    AgriPulse
                                 </span>
                             </div>
                         )}
@@ -432,8 +432,8 @@ function MobileSidebar({
     return (
         <div className="flex h-full flex-col">
             <div className="flex items-center gap-2 px-4 py-5">
-                <Leaf className="h-7 w-7 text-primary" />
-                <span className="text-lg font-bold tracking-tight">OpenFarm</span>
+                <AgriPulseLogo className="h-7 w-7 text-primary" />
+                <span className="text-lg font-bold tracking-tight">AgriPulse</span>
             </div>
             <Separator />
             <div className="px-3 py-3">

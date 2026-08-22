@@ -5,7 +5,6 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import {
-    Leaf,
     ArrowRight,
     ArrowUp,
     Github,
@@ -18,6 +17,7 @@ import {
     RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AgriPulseLogo } from "@/components/ui/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SignInModal } from "@/components/sign-in-modal";
@@ -25,7 +25,7 @@ import { FieldOutline, FieldRaster, IMAGERY, IMAGERY_FLAT } from "@/components/m
 import { BUILT_WITH } from "@/components/marketing/brand-marks";
 import { FAQ_IDS } from "@/lib/faq";
 
-const REPO = "https://github.com/superzero11/OpenFarm";
+const REPO = "https://github.com/robloxsagax-web/AgriPulse";
 const DISCORD = "https://discord.gg/KM9qxpEmsU";
 
 /* Where the numbers come from. Attribution by name is what these
@@ -246,8 +246,8 @@ export function LandingPage({ isAuthenticated = false }: { isAuthenticated?: boo
             <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
                 <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-6">
                     <Link href="/" className="flex items-center gap-2.5 text-[17px] font-bold tracking-tight">
-                        <Leaf className="h-5 w-5 text-primary" strokeWidth={2} />
-                        OpenFarm
+                        <AgriPulseLogo className="h-5 w-5 text-primary" />
+                        AgriPulse
                     </Link>
 
                     <div className="flex items-center gap-5">
@@ -313,7 +313,11 @@ export function LandingPage({ isAuthenticated = false }: { isAuthenticated?: boo
                             <span className="text-[12.5px]">{t("badge")}</span>
                         </div>
 
-                        <h1 className="mt-6 text-4xl font-bold leading-[1.05] tracking-[-0.035em] sm:text-5xl">
+                        <p className="mt-6 text-[13px] font-semibold uppercase tracking-[0.18em] text-primary">
+                            {t("tagline")}
+                        </p>
+
+                        <h1 className="mt-3 text-4xl font-bold leading-[1.05] tracking-[-0.035em] sm:text-5xl">
                             {t("heroTitle1")} <span className="text-primary">{t("heroTitle2")}</span>
                         </h1>
 
@@ -720,7 +724,7 @@ export function LandingPage({ isAuthenticated = false }: { isAuthenticated?: boo
                         <div className="p-4 font-mono text-[12.5px] leading-[1.85] [overflow-wrap:anywhere]">
                             <p className="text-muted-foreground"># clone, configure, run</p>
                             <p>
-                                <span className="text-primary">git</span> clone github.com/superzero11/OpenFarm
+                                <span className="text-primary">git</span> clone github.com/robloxsagax-web/AgriPulse
                             </p>
                             <p>
                                 <span className="text-primary">cp</span> .env.example .env
@@ -864,7 +868,7 @@ export function LandingPage({ isAuthenticated = false }: { isAuthenticated?: boo
             <footer className="border-t">
                 <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-7">
                     <div className="flex items-center gap-2">
-                        <Leaf className="h-4 w-4 text-primary" strokeWidth={2} />
+                        <AgriPulseLogo className="h-4 w-4 text-primary" />
                         <span className="text-[13px] text-muted-foreground">{t("footerTagline")}</span>
                     </div>
 

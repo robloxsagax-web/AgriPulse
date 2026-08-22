@@ -1,41 +1,41 @@
 <div align="center">
 
-# OpenFarm
+# AgriPulse
 
-<img src="apps/web/public/logo.svg" alt="OpenFarm Logo" width="120" />
+<img src="apps/web/public/logo.svg" alt="AgriPulse Logo" width="120" />
 
-### Open Intelligence for Every Farm
+### Real-time planetary monitoring for next-gen farming.
 
 Open source self-hostable and reproducible Crop Intelligence Platform
 
-[![CI](https://github.com/superzero11/OpenFarm/actions/workflows/ci.yml/badge.svg)](https://github.com/superzero11/OpenFarm/actions/workflows/ci.yml)
+[![CI](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
 
-[![GitHub stars](https://img.shields.io/github/stars/superzero11/OpenFarm?style=social)](https://github.com/superzero11/OpenFarm)
+[![GitHub stars](https://img.shields.io/github/stars/robloxsagax-web/AgriPulse?style=social)](https://github.com/robloxsagax-web/AgriPulse)
 [![Discord](https://img.shields.io/discord/1480056202829234379?color=7289da&label=Discord&logo=discord&logoColor=white)](https://discord.gg/KM9qxpEmsU)
 [![Patreon](https://img.shields.io/badge/Patreon-Support%20Us-F96854?logo=patreon&logoColor=white)](https://www.patreon.com/c/SuperZero11)
 
-**[Live Demo](https://openfarm.earth)** · [Report Bug](https://github.com/superzero11/OpenFarm/issues) · [Request Feature](https://github.com/superzero11/OpenFarm/issues)
+**[Live Demo](https://agripulse.earth)** · [Report Bug](https://github.com/robloxsagax-web/AgriPulse/issues) · [Request Feature](https://github.com/robloxsagax-web/AgriPulse/issues)
 
 <p>
-  <img src="apps/web/public/screenshots/openfarm-1.png" width="49%" />
-  <img src="apps/web/public/screenshots/openfarm-2.png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-1.png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-2.png" width="49%" />
 </p>
 <p>
-  <img src="apps/web/public/screenshots/openfarm-3.png" width="49%" />
-  <img src="apps/web/public/screenshots/openfarm-4.png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-3.png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-4.png" width="49%" />
 </p>
 
 </div>
 
-**OpenFarm is an open, modular field intelligence platform that fuses satellite, weather, soil, and time to explain what is happening in a field - and why.**
+**AgriPulse is an open, modular field intelligence platform that fuses satellite, weather, soil, and time to explain what is happening in a field - and why.**
 
 - **Vision:** A world where every farm, from smallholders to enterprises, can access transparent, trustworthy, and affordable digital farming intelligence.
 - **Mission:** Build and maintain an open, reproducible crop intelligence platform that turns satellite, weather, soil, and field data into actionable insights - deployable anywhere (self-hosted or hosted).
 
-## Why OpenFarm
+## Why AgriPulse
 - Self-hostable stack with clear service boundaries (Next.js ↔ FastAPI ↔ TiTiler ↔ MinIO ↔ PostGIS)
 - Multi-index vegetation monitoring - NDVI, EVI, SAVI (configurable L factor), and NDWI from Sentinel-2 imagery with automatic 24-month historical backfill
 - ML-powered automatic field boundary detection (FTW model) with interactive review workflow
@@ -54,7 +54,7 @@ Open source self-hostable and reproducible Crop Intelligence Platform
 
 ## Architecture
 
-OpenFarm follows a 3-layer strategic architecture:
+AgriPulse follows a 3-layer strategic architecture:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -90,7 +90,7 @@ cp .env.example .env
 # Fill GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
 # Generate secrets:
 #   NEXTAUTH_SECRET:     openssl rand -base64 32
-#   OPENFARM_JWT_SECRET: openssl rand -base64 64
+#   AGRIPULSE_JWT_SECRET: openssl rand -base64 64
 
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
@@ -207,11 +207,11 @@ See [ROADMAP.md](ROADMAP.md) for the full development plan - what's done, what's
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, style, and PR process
 - See [DESIGN.md](DESIGN.md) for the design system - read it before any UI change. Tokens, colour bindings, typography, spacing, icons, components and charts. No raw colours or sizes outside the token layer
 - See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards
-- See [SECURITY.md](SECURITY.md) to report vulnerabilities (via [GitHub private reporting](https://github.com/superzero11/OpenFarm/security/advisories/new))
+- See [SECURITY.md](SECURITY.md) to report vulnerabilities (via [GitHub private reporting](https://github.com/robloxsagax-web/AgriPulse/security/advisories/new))
 
 ## Acknowledgements
 
-OpenFarm is a thin layer over decades of open source and open data. These projects do the hard parts, and every one of them is free for anyone to use.
+AgriPulse is a thin layer over decades of open source and open data. These projects do the hard parts, and every one of them is free for anyone to use.
 
 **Data and imagery**
 - [Copernicus Sentinel-2](https://dataspace.copernicus.eu) (ESA) - 10 m multispectral imagery
@@ -232,7 +232,7 @@ OpenFarm is a thin layer over decades of open source and open data. These projec
 [Docker](https://www.docker.com), [Caddy](https://caddyserver.com), [Terraform](https://www.terraform.io), [Ubuntu](https://ubuntu.com), [GitHub Actions](https://github.com/features/actions).
 
 **Hosting**
-[Oracle Cloud Infrastructure](https://www.oracle.com/cloud/free/) runs the live demo at [openfarm.earth](https://openfarm.earth) on an Always Free Ampere instance - the same 2 OCPU and 12 GB anyone can claim, which is also the deployment target Terraform provisions in [deploy/terraform](deploy/terraform).
+[Oracle Cloud Infrastructure](https://www.oracle.com/cloud/free/) runs the live demo at [agripulse.earth](https://agripulse.earth) on an Always Free Ampere instance - the same 2 OCPU and 12 GB anyone can claim, which is also the deployment target Terraform provisions in [deploy/terraform](deploy/terraform).
 
 ## License
 

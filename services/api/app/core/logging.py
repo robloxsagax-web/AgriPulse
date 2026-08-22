@@ -22,4 +22,4 @@ def setup_logging() -> None:
     )
 
 
-logger = structlog.get_logger("openfarm.api")
+logger = structlog.get_logger("agripulse.api")

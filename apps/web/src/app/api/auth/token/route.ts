@@ -5,14 +5,14 @@ import { authOptions } from "@/lib/auth";
 import { logger } from "@/lib/logger";
 
 const JWT_SECRET = new TextEncoder().encode(
-    process.env.OPENFARM_JWT_SECRET || "change-me"
+    process.env.AGRIPULSE_JWT_SECRET || "change-me"
 );
 const JWT_TTL_SECONDS = 3600; // 1 hour
 
 /**
  * POST /api/auth/token
  *
- * Mints an OpenFarm API JWT for the authenticated user.
+ * Mints an AgriPulse API JWT for the authenticated user.
  * Authenticated by the NextAuth session cookie.
  *
  * Returns: { token: string, expires_at: string }
