@@ -17,12 +17,12 @@
 [Report Bug](https://github.com/robloxsagax-web/AgriPulse/issues) · [Request Feature](https://github.com/robloxsagax-web/AgriPulse/issues)
 
 <p>
-  <img src="apps/web/public/screenshots/agripulse-1.png" width="49%" />
-  <img src="apps/web/public/screenshots/agripulse-2.png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-1 (1).png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-2 (1).png" width="49%" />
 </p>
 <p>
-  <img src="apps/web/public/screenshots/agripulse-3.png" width="49%" />
-  <img src="apps/web/public/screenshots/agripulse-4.png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-3 (1).png" width="49%" />
+  <img src="apps/web/public/screenshots/agripulse-4 (1).png" width="49%" />
 </p>
 
 </div>
