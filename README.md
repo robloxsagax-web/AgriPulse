@@ -1,23 +1,20 @@
 <div align="center">
 
-# AgriPulse
+<img src="apps/web/public/logo.svg" alt="AgriPulse Logo" width="140" />
 
-<img src="apps/web/public/logo.svg" alt="AgriPulse Logo" width="120" />
+# AgriPulse
 
 ### Real-time planetary monitoring for next-gen farming.
 
-Open source self-hostable and reproducible Crop Intelligence Platform
+**Open-source crop intelligence: satellite imagery, weather, and soil fused into explainable, actionable insight for every field on Earth.**
 
-[![CI](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml)
+[![NextStep Hacks 2026 — Earth Forward](https://img.shields.io/badge/NextStep%20Hacks%202026-Earth%20Forward%20%F0%9F%8C%8D-16a34a)](https://devpost.com)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
-![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
-
+[![CI](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/robloxsagax-web/AgriPulse?style=social)](https://github.com/robloxsagax-web/AgriPulse)
 [![Discord](https://img.shields.io/discord/1480056202829234379?color=7289da&label=Discord&logo=discord&logoColor=white)](https://discord.gg/KM9qxpEmsU)
-[![Patreon](https://img.shields.io/badge/Patreon-Support%20Us-F96854?logo=patreon&logoColor=white)](https://www.patreon.com/c/SuperZero11)
 
-**[Live Demo](https://agripulse.earth)** · [Report Bug](https://github.com/robloxsagax-web/AgriPulse/issues) · [Request Feature](https://github.com/robloxsagax-web/AgriPulse/issues)
+[Live Demo](https://agripulse.earth) · [Report Bug](https://github.com/robloxsagax-web/AgriPulse/issues) · [Request Feature](https://github.com/robloxsagax-web/AgriPulse/issues)
 
 <p>
   <img src="apps/web/public/screenshots/agripulse-1.png" width="49%" />
@@ -30,210 +27,245 @@ Open source self-hostable and reproducible Crop Intelligence Platform
 
 </div>
 
-**AgriPulse is an open, modular field intelligence platform that fuses satellite, weather, soil, and time to explain what is happening in a field - and why.**
+---
 
-- **Vision:** A world where every farm, from smallholders to enterprises, can access transparent, trustworthy, and affordable digital farming intelligence.
-- **Mission:** Build and maintain an open, reproducible crop intelligence platform that turns satellite, weather, soil, and field data into actionable insights - deployable anywhere (self-hosted or hosted).
+## 🌍 The Problem — Why "Earth Forward" Needs AgriPulse
 
-## Why AgriPulse
-- Self-hostable stack with clear service boundaries (Next.js ↔ FastAPI ↔ TiTiler ↔ MinIO ↔ PostGIS)
-- Multi-index vegetation monitoring - NDVI, EVI, SAVI (configurable L factor), and NDWI from Sentinel-2 imagery with automatic 24-month historical backfill
-- ML-powered automatic field boundary detection (FTW model) with interactive review workflow
-- Daily weather data with agricultural indices (GDD, water balance, drought index) via Open-Meteo
-- Soil intelligence - automatic soil profile ingestion from SoilGrids (global, 250m) and POLARIS (US, 30m) with crop suitability scoring (68 crops), sampling zone recommendations, carbon sequestration estimation, nutrient risk classification, and soil×weather stress monitoring
-- Reproducible pipeline with provenance (Element84 STAC → COG → TiTiler tiles)
-- Tenant isolation via `X-Org-Id` + JWT; RBAC (`owner`/`admin`/`member`/`viewer`)
-- MapLibre + PMTiles (no Mapbox token needed), ECharts for time series
-- Open, permissive BSD-3-Clause license
+By 2050, humanity must feed **~10 billion people** on the same — or less — farmland, while climate change makes every growing season less predictable:
 
-## Prerequisites
-- Docker + Docker Compose v2
-- Node.js 20+ and npm 10+ (for local web development)
-- Python 3.11+ and pip (for local API development)
-- Google OAuth credentials (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`)
+- 🌡️ **Climate volatility** — droughts, floods and heatwaves now arrive faster than farmers can react.
+- 💧 **Water scarcity** — agriculture consumes ~70% of global freshwater, much of it misallocated for lack of data.
+- 🛰️ **The data divide** — satellites already image every field on Earth every 5 days for free, yet the analytics platforms that turn those pixels into decisions are locked behind per-hectare enterprise pricing that smallholders — who produce a third of the world's food — can never afford.
+- 🌱 **Soil degradation** — a third of the planet's soils are already degraded, eroding yields and carbon stocks invisibly, below our feet.
 
-## Architecture
+**The planet watches every field from space. AgriPulse finally lets every farmer watch back.**
 
-AgriPulse follows a 3-layer strategic architecture:
+## 💡 The Solution
+
+**AgriPulse is a free, open-source, self-hostable crop intelligence platform** that fuses Sentinel-2 satellite imagery (10 m resolution), daily weather, and global soil datasets into one explainable picture of any field — and tells you not just *what* is happening, but *why*.
+
+Draw a field boundary on a map (or let our ML model detect it for you), and AgriPulse automatically:
+
+1. **Backfills 24 months of vegetation history** — NDVI, EVI, SAVI, NDWI computed per scene from the public Sentinel-2 archive.
+2. **Watches the field every 5 days** and raises **explained alerts** — every anomaly ships with the observation, its magnitude, its time window, and the weather + soil context behind it.
+3. **Profiles the soil to 200 cm depth** (SoilGrids global / POLARIS US) and scores **68 crops** for suitability with a transparent 4-pillar model.
+4. **Quantifies sustainability** — carbon sequestration potential, water balance, drought index, leaching/compaction/waterlogging risk — the metrics that turn good intentions into measurable environmental impact.
+
+No API keys. No vendor lock-in. No per-acre fees. BSD-3-Clause.
+
+## 🏆 Why AgriPulse Wins
+
+| Judging criterion | How AgriPulse delivers |
+|---|---|
+| **Originality** | The open-source answer to precision agriculture: satellite + weather + soil fused into *explainable* per-field alerts with a self-hosted, zero-cost deployment story — crop intelligence as public infrastructure, not a subscription. |
+| **Adherence to "Earth Forward"** | Directly advances sustainable agriculture (the named theme): water-balance and drought monitoring, soil carbon estimation, crop-suitability planning for a changing climate, and early stress detection that cuts waste of water, fertilizer and yield. Maps to UN SDG 2 (Zero Hunger), SDG 13 (Climate Action) and SDG 15 (Life on Land). |
+| **Completion** | A real, working product: live demo at [agripulse.earth](https://agripulse.earth), one-command Docker deployment, CI-enforced code quality, i18n (EN/ES), dark mode, shareable field-health reports. |
+| **Learning** | Built on a deliberately modern, teachable stack — Next.js 14, FastAPI, PostGIS, Celery, TiTiler, PyTorch — with architecture and design-system docs written for newcomers. |
+| **Design** | A token-driven design system ([DESIGN.md](DESIGN.md)), IBM Plex typography, accessible dark/light themes, MapLibre maps, ECharts time series — polished enough for the field and the boardroom. |
+| **Technology** | Cloud-native geospatial pipeline: STAC catalog search → COG → TiTiler tiles → PostGIS → PMTiles; PyTorch field-boundary detection (Fields of The World); async Celery processing; full RBAC multi-tenancy. |
+
+## ✨ Feature Highlights
+
+### 🛰️ Satellite Intelligence
+- Four vegetation indices — **NDVI, EVI, SAVI (configurable L), NDWI** — from Sentinel-2 at 10 m
+- Automatic **24-month historical backfill** + weekly auto-compute per field
+- Reproducible, provenance-tracked pipeline: Element84 STAC → COG → TiTiler
+
+### 🌦️ Weather Intelligence (Open-Meteo)
+- Daily history + 7-day forecast: temperature, precipitation, ET₀, VPD, soil moisture/temperature
+- Agronomic derivations: **Growing Degree Days, water balance, drought index**
+
+### 🌱 Soil Intelligence
+- Auto-ingestion from **SoilGrids (global, 250 m)** and **POLARIS (US, 30 m)**: texture by depth, pH, organic carbon, CEC, bulk density, available water capacity
+- **Crop suitability scoring across 68 crops** (Soil 40% · Water 25% · Climate 20% · Stress 15%) with limiting-factor explanations
+- Sustainability metrics: **carbon sequestration estimation**, nutrient risk zones, sampling-zone recommendations, soil×weather stress indicators
+
+### 🤖 ML Boundary Detection
+- Fields of The World (PyTorch/TorchGeo) model detects field boundaries from imagery — draw a rough area, review detections with confidence scores, accept with one click
+
+### 🚨 Explained Alerts
+- Configurable per-index thresholds and drop-percentage rules
+- Every alert enriched with the weather and soil conditions that explain it — **no black boxes**
+
+### 🗺️ Delivery
+- Interactive MapLibre + PMTiles maps (**no Mapbox token needed**), per-index colormaps, scouting markers with photo upload
+- ECharts time series with percentile bands; **read-only share links** for agronomists and buyers
+- Google OAuth → JWT, owner/admin/member/viewer RBAC, audit logging, EN/ES i18n, dark/light themes
+
+## 🏗️ Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Layer C - Delivery Surfaces                   (Distribution)  │
-│  Map UI · Reports · API · Webhooks · MCP · Mobile scouting     │
+│  Layer C — Delivery Surfaces                    (Distribution)  │
+│  Map UI · Reports · API · Webhooks · MCP · Mobile scouting      │
 ├─────────────────────────────────────────────────────────────────┤
-│  Layer B - Intelligence Engine                       (Moat)    │
-│  Phenology · Anomaly detection · Stress signals · Yield        │
-│  Risk models · Soil-derived insights · Explainability          │
+│  Layer B — Intelligence Engine                        (Moat)    │
+│  Phenology · Anomaly detection · Stress signals · Yield         │
+│  Risk models · Soil-derived insights · Explainability           │
 ├─────────────────────────────────────────────────────────────────┤
-│  Layer A - Observation Infrastructure         (Data Gravity)   │
-│  Satellite · Weather · Soil · Field boundaries · Sensors       │
+│  Layer A — Observation Infrastructure          (Data Gravity)   │
+│  Satellite · Weather · Soil · Field boundaries · Sensors        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-- **Layer A** collects, standardizes, and stores raw signals (satellite imagery, weather, soil profiles, field boundaries)
-- **Layer B** transforms observations into explainable, agronomically meaningful insights with confidence scores
-- **Layer C** delivers intelligence through maps, reports, APIs, and integrations
+**Tech stack**
 
-**Tech stack:**
 ```
-apps/web/       → Next.js 14 + NextAuth (Google OAuth) + Tailwind + shadcn/ui + MapLibre + ECharts
-services/api/   → FastAPI + SQLAlchemy 2.0 (async) + Alembic + Celery tasks
+apps/web/       → Next.js 14 · NextAuth (Google OAuth) · Tailwind · shadcn/ui · MapLibre · ECharts
+services/api/   → FastAPI · SQLAlchemy 2.0 (async) · Alembic · Celery
 services/tiler/ → TiTiler COG tile server (shared JWT auth)
-docker-compose.yml → Postgres/PostGIS, Redis, MinIO, API, Celery worker, TiTiler, Web
+infra           → PostgreSQL/PostGIS · Redis · MinIO · Docker Compose · Caddy (auto-SSL)
+ml              → PyTorch · TorchGeo (Fields of The World boundary detection)
 ```
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the full strategic architecture document.
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the full strategic architecture.
 
-## Quick Start (Full Stack via Docker)
+---
+
+## 🚀 Deploy Locally — In Depth
+
+The entire platform runs on your machine with **one command** via Docker Compose. No cloud account, no paid API keys, no external services required beyond a free Google OAuth client for sign-in.
+
+### Step 0 — Prerequisites
+
+| Requirement | Version | Check with |
+|---|---|---|
+| Docker Engine | 24+ | `docker --version` |
+| Docker Compose | v2 (plugin) | `docker compose version` |
+| Node.js | 20+ *(only for local frontend dev)* | `node --version` |
+| Python | 3.11+ *(only for local backend dev)* | `python3 --version` |
+| Git | any recent | `git --version` |
+
+### Step 1 — Clone
+
+```bash
+git clone https://github.com/robloxsagax-web/AgriPulse.git
+cd AgriPulse
+```
+
+### Step 2 — Configure environment
+
 ```bash
 cp .env.example .env
-# Fill GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
-# Generate secrets:
-#   NEXTAUTH_SECRET:     openssl rand -base64 32
-#   AGRIPULSE_JWT_SECRET: openssl rand -base64 64
+```
 
+Only **three values must change** for a working local deployment; every other default already points at the local containers:
+
+1. **Google OAuth credentials** (sign-in provider — free, 2 minutes):
+   - Go to [Google Cloud Console → Credentials](https://console.cloud.google.com/apis/credentials)
+   - *Create Credentials → OAuth client ID → Web application*
+   - Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
+   - Copy the values into `.env`:
+     ```bash
+     GOOGLE_CLIENT_ID=xxxx.apps.googleusercontent.com
+     GOOGLE_CLIENT_SECRET=xxxx
+     ```
+
+2. **Two random secrets** (generate them with OpenSSL):
+   ```bash
+   # Run these and paste the output into .env
+   openssl rand -base64 32    # → NEXTAUTH_SECRET
+   openssl rand -base64 64    # → AGRIPULSE_JWT_SECRET
+   ```
+
+That's it. Postgres, Redis, MinIO, the STAC endpoint (Element84's public Earth Search), soil datasets (SoilGrids/POLARIS) and weather (Open-Meteo) all work out of the box with public or containerized endpoints.
+
+### Step 3 — Launch the full stack
+
+```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
-Services:
-| Service | URL | Purpose |
-|---|---|---|
-| Web (Next.js) | http://localhost:3000 | Frontend UI |
-| API (FastAPI) | http://localhost:8000 | Backend API |
-| API Docs | http://localhost:8000/docs | Swagger UI |
-| TiTiler | http://localhost:8080 | COG tiles |
-| MinIO Console | http://localhost:9001 | Object storage admin |
+This starts **seven services**: PostGIS, Redis, MinIO, the FastAPI backend, the Celery worker, the TiTiler tile server, and the Next.js web app. First build takes a few minutes (GDAL/PyTorch images are large); subsequent starts are seconds.
 
-Health checks:
+### Step 4 — Verify everything is alive
+
 ```bash
-curl http://localhost:8000/healthz    # API
-curl http://localhost:8080/healthz    # TiTiler
-curl http://localhost:3000/api/health # Web
+curl http://localhost:8000/healthz     # API       → {"status":"ok"}
+curl http://localhost:8080/healthz     # TiTiler   → {"status":"ok"}
+curl http://localhost:3000/api/health  # Web       → ok
 ```
 
-## Local Development
+| Service | URL | Purpose |
+|---|---|---|
+| 🌐 Web app | http://localhost:3000 | The product — sign in and draw your first field |
+| 📖 API docs | http://localhost:8000/docs | Interactive Swagger UI for every endpoint |
+| 🗺️ TiTiler | http://localhost:8080 | On-the-fly satellite COG tiles |
+| 🪣 MinIO console | http://localhost:9001 | Object storage admin (scouting photos, COGs) |
 
-### Frontend (apps/web)
+Open **http://localhost:3000**, sign in with Google, create a workspace, and draw a field polygon — AgriPulse immediately queues the 24-month backfill and you can watch indices appear on the map and charts within minutes.
+
+### Step 5 — Optional: hot-reload local development
+
+If you want to hack on the code instead of just running it:
+
+**Frontend** (Next.js dev server with fast refresh):
 ```bash
 cd apps/web
 npm install
-npm run dev          # start dev server
-npm run lint         # ESLint
-npm run type-check   # TypeScript (no emit)
-npm run build        # production build
+npm run dev          # http://localhost:3000
 ```
 
-### Backend (services/api)
+**Backend** (Uvicorn with auto-reload):
 ```bash
 cd services/api
-pip install -e ".[dev]"   # includes ruff
-alembic upgrade head
+pip install -e ".[dev]"
+alembic upgrade head                       # run DB migrations
 uvicorn app.main:app --reload --port 8000
-
-ruff check .              # lint
-ruff format --check .     # format check
 ```
 
-### Database Migrations
+**Database migrations** (after changing SQLAlchemy models):
 ```bash
 cd services/api
 alembic revision --autogenerate -m "describe change"
 alembic upgrade head
-
 ```
 
-## Developer Verification Checklist
-Run these before opening a PR:
-
+**Quality gates** (same checks CI enforces):
 ```bash
-# Web
-cd apps/web
-npm run lint
-npm run type-check
-npm run build
-
-# API
-cd ../../services/api
-ruff check .
-ruff format --check .
+cd apps/web     && npm run lint && npm run type-check && npm run build
+cd services/api && ruff check . && ruff format --check .
 ```
 
-## API Conventions
+### Production deployment
+
+To deploy on a real server (a free Oracle Cloud VM works perfectly — that's what runs the demo), see **[DEPLOYMENT.md](DEPLOYMENT.md)**: Terraform + cloud-init provision the VM, Docker Compose runs the stack, and Caddy issues TLS certificates automatically.
+
+---
+
+## 📡 API Conventions
+
 - All endpoints prefixed with `/v1`
-- Org-scoped endpoints require `X-Org-Id` header and JWT
+- Org-scoped endpoints require `X-Org-Id` header + JWT
 - Pagination envelope: `{ items, total, limit, offset }`
-- Soft delete via `deleted_at` column
-- Geometry stored as `MultiPolygon(4326)`; polygons auto-wrapped
-- Audit events on key actions (e.g., field_created)
+- Geometry stored as `MultiPolygon(4326)`; soft delete via `deleted_at`
+- Audit events on key actions (e.g., `field_created`)
 
-## Feature Overview
+## 🌱 Impact & What's Next
 
-### Layer A - Observation
-- **Satellite Intelligence**: NDVI, EVI, SAVI (configurable L), NDWI from Sentinel-2 - STAC search → COG → TiTiler tiles → time-series stats, with automatic 24-month historical backfill and weekly auto-compute
-- **Weather Intelligence**: daily historical + 7-day forecast via Open-Meteo - temperature, precipitation, ET₀, soil moisture/temperature, VPD, GDD, water balance, drought index
-- **Soil Intelligence**: automatic soil profile from SoilGrids (global, 250m) and POLARIS (US, 30m) - texture-by-depth, pH, organic carbon, CEC, bulk density, AWC, Rosetta PTF hydraulic properties, risk scoring, crop suitability (68 profiles, 4-pillar model), sampling zones, carbon estimation, nutrient context
-- **Boundary Detection**: ML-powered field boundary detection (FTW model) from Sentinel-2 - draw area, review with confidence scores, accept as fields
-- **Farms & Fields**: draw/upload GeoJSON/KML polygons, auto area calculation, soft delete
+AgriPulse puts planetary-scale monitoring in the hands of the people who need it most. Next on the roadmap ([ROADMAP.md](ROADMAP.md)):
 
-### Layer B - Intelligence
-- **Per-Index Alerts**: configurable threshold and drop-percentage rules, enriched with weather context and soil data
-- **Crop Suitability**: 4-pillar weighted scoring (Soil 40%, Water 25%, Climate 20%, Stress 15%) across 68 crop profiles with limiting factors
-- **Soil Intelligence**: nutrient risk zones, carbon sequestration potential, sampling zone recommendations, soil×weather stress indicators
-- **Risk Scoring**: acidification, compaction, leaching, waterlogging, and rooting risk from soil properties
-- **Multi-Signal Context**: alerts combine vegetation anomalies + weather conditions + soil characteristics
+- **Yield estimation & phenology tracking** — closing the loop from monitoring to forecasting
+- **Mobile scouting app** — offline-first field observations synced to the map
+- **Webhooks & MCP integrations** — field intelligence inside the tools farmers already use
+- **Community agronomy models** — open, peer-reviewed crop and risk models anyone can contribute
 
-### Layer C - Delivery
-- **Interactive Map**: MapLibre + PMTiles (no Mapbox needed), multi-layer toggle, per-index colormaps, scouting and sampling zone markers with interactive popups
-- **Time-Series Charts**: ECharts with percentile bands, NDVI + weather overlay, soil depth visualization
-- **Scouting**: geotagged observations with photo upload and auto-attached weather snapshot
-- **Sharing**: read-only field health reports via share links with multi-index, weather, and soil summary
-- **Auth & RBAC**: Google OAuth → JWT bridge, owner/admin/member/viewer roles, audit logging
-- **i18n**: English + Spanish, dark/light theme
-- **Changelog**: in-app changelog page with version history
+## 🤝 Contributing
 
-## Quality & CI
-- GitHub Actions: lint + type-check (`.github/workflows/ci.yml`)
-- Frontend: `npm run lint`, `npm run type-check`
-- Backend: `ruff check`, `ruff format --check`
-- No tests yet - contributions welcome
+We genuinely want contributors — see [CONTRIBUTING.md](CONTRIBUTING.md) for setup and PR process, [DESIGN.md](DESIGN.md) before any UI change, and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards. Report vulnerabilities via [GitHub private reporting](https://github.com/robloxsagax-web/AgriPulse/security/advisories/new) (see [SECURITY.md](SECURITY.md)).
 
-## Deployment
-See [DEPLOYMENT.md](DEPLOYMENT.md) for a step-by-step guide to deploy on a free Oracle Cloud VM (or any VPS) with Docker Compose + Caddy auto-SSL.
+## 🙏 Acknowledgements
 
-## Roadmap
-See [ROADMAP.md](ROADMAP.md) for the full development plan - what's done, what's in progress, and where contributors can help most.
+AgriPulse stands on decades of open data and open source — all free, all public:
 
-## Contributing & Security
-- See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, style, and PR process
-- See [DESIGN.md](DESIGN.md) for the design system - read it before any UI change. Tokens, colour bindings, typography, spacing, icons, components and charts. No raw colours or sizes outside the token layer
-- See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community standards
-- See [SECURITY.md](SECURITY.md) to report vulnerabilities (via [GitHub private reporting](https://github.com/robloxsagax-web/AgriPulse/security/advisories/new))
+**Data & imagery** — [Copernicus Sentinel-2](https://dataspace.copernicus.eu) (ESA) · [Element 84 Earth Search](https://element84.com/earth-search/) · [Open-Meteo](https://open-meteo.com) · [ISRIC SoilGrids](https://soilgrids.org) · [POLARIS](https://registry.opendata.aws/polaris/) · [Fields of The World](https://fieldsofthe.world) · [OpenStreetMap](https://www.openstreetmap.org/copyright) & [Protomaps](https://protomaps.com)
 
-## Acknowledgements
+**Backend** — Python · FastAPI · SQLAlchemy · Alembic · Celery · PostgreSQL · PostGIS · Redis · MinIO · GDAL · rasterio · TiTiler · PyTorch · TorchGeo · OSGeo
 
-AgriPulse is a thin layer over decades of open source and open data. These projects do the hard parts, and every one of them is free for anyone to use.
+**Frontend** — Next.js · React · TypeScript · Tailwind CSS · shadcn/ui · Lucide · MapLibre GL · Apache ECharts · Auth.js · next-intl
 
-**Data and imagery**
-- [Copernicus Sentinel-2](https://dataspace.copernicus.eu) (ESA) - 10 m multispectral imagery
-- [Element 84 Earth Search](https://element84.com/earth-search/) - public STAC catalogue
-- [Open-Meteo](https://open-meteo.com) - daily weather history and forecast
-- [ISRIC SoilGrids](https://soilgrids.org) - global soil properties at 250 m
-- [POLARIS](https://registry.opendata.aws/polaris/) - US soil properties at 30 m
-- [Fields of The World](https://fieldsofthe.world) - field boundary detection model
-- [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors and [Protomaps](https://protomaps.com) - basemap data and tiles
+**Infrastructure** — Docker · Caddy · Terraform · Ubuntu · GitHub Actions
 
-**Backend**
-[Python](https://www.python.org), [FastAPI](https://fastapi.tiangolo.com), [SQLAlchemy](https://www.sqlalchemy.org), [Alembic](https://alembic.sqlalchemy.org), [Celery](https://docs.celeryq.dev), [PostgreSQL](https://www.postgresql.org), [PostGIS](https://postgis.net), [Redis](https://redis.io), [MinIO](https://min.io), [GDAL](https://gdal.org), [rasterio](https://rasterio.readthedocs.io), [TiTiler](https://developmentseed.org/titiler/), [PyTorch](https://pytorch.org), [TorchGeo](https://torchgeo.readthedocs.io), and the wider [OSGeo](https://www.osgeo.org) ecosystem.
+## 📄 License
 
-**Frontend**
-[Next.js](https://nextjs.org), [React](https://react.dev), [TypeScript](https://www.typescriptlang.org), [Tailwind CSS](https://tailwindcss.com), [shadcn/ui](https://ui.shadcn.com), [Lucide](https://lucide.dev), [MapLibre GL](https://maplibre.org), [Apache ECharts](https://echarts.apache.org), [Auth.js](https://authjs.dev), [next-intl](https://next-intl.dev).
-
-**Infrastructure**
-[Docker](https://www.docker.com), [Caddy](https://caddyserver.com), [Terraform](https://www.terraform.io), [Ubuntu](https://ubuntu.com), [GitHub Actions](https://github.com/features/actions).
-
-**Hosting**
-[Oracle Cloud Infrastructure](https://www.oracle.com/cloud/free/) runs the live demo at [agripulse.earth](https://agripulse.earth) on an Always Free Ampere instance - the same 2 OCPU and 12 GB anyone can claim, which is also the deployment target Terraform provisions in [deploy/terraform](deploy/terraform).
-
-## License
-
-BSD-3-Clause - see [LICENSE](LICENSE)
+BSD-3-Clause — see [LICENSE](LICENSE). Free forever, for every farmer on Earth. 🌍
