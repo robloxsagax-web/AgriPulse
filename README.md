@@ -12,9 +12,9 @@
 [![License: Mit Lisence](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
 [![CI](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/robloxsagax-web/AgriPulse/actions/workflows/ci.yml)
 [![GitHub stars](https://img.shields.io/github/stars/robloxsagax-web/AgriPulse?style=social)](https://github.com/robloxsagax-web/AgriPulse)
-[![Discord](https://img.shields.io/discord/1480056202829234379?color=7289da&label=Discord&logo=discord&logoColor=white)](https://discord.gg/KM9qxpEmsU)
 
-[Live Demo](https://agripulse.earth) · [Report Bug](https://github.com/robloxsagax-web/AgriPulse/issues) · [Request Feature](https://github.com/robloxsagax-web/AgriPulse/issues)
+
+[Report Bug](https://github.com/robloxsagax-web/AgriPulse/issues) · [Request Feature](https://github.com/robloxsagax-web/AgriPulse/issues)
 
 <p>
   <img src="apps/web/public/screenshots/agripulse-1.png" width="49%" />
