@@ -1,6 +1,6 @@
 # Roadmap
 
-> Last updated: March 2026
+> Last updated: Augest 2026
 
 This document outlines where AgriPulse is today and where it's headed. If you'd like to contribute to any of these areas, check the [Contributing Guide](CONTRIBUTING.md) and look for issues labeled [`help wanted`](https://github.com/robloxsagax-web/AgriPulse/labels/help%20wanted) or [`good first issue`](https://github.com/robloxsagax-web/AgriPulse/labels/good%20first%20issue).
 
