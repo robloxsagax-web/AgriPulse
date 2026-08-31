@@ -5,7 +5,7 @@
 # AgriPulse
 
 ### Real-time planetary monitoring for next-gen farming.
-
+ 
 **Open-source crop intelligence: satellite imagery, weather, and soil fused into explainable, actionable insight for every field on Earth.**
 
 [![NextStep Hacks 2026 — Earth Forward](https://img.shields.io/badge/NextStep%20Hacks%202026-Earth%20Forward%20%F0%9F%8C%8D-16a34a)](https://devpost.com)
